@@ -1,7 +1,7 @@
 Checkpoint 1: completed
 	- Simulation for Part One - models assumptions for this project. Simulate feature selection to map real-world observations to task state in HTM.
 	- Simulation for Part Two - models initial training interactions to build default mapping of task states to set of supportive behaviors. Can be extended to instead model initial training interactions to build default mapping of (task state, timestep) to set of supportive behaviors.
-	- Simulation for Part Three - basic uncertainty measure defined. Returns vector for whether or not to query user for supportive action label given a set of real-world observations.
+	- Basic uncertainty measure defined. Returns vector for whether or not to query user for supportive action label given a set of real-world observations.
 
 Checkpoint 2: completed
 	- Pushed to next checkpoint: use task_models instead of simpler HTM definition
