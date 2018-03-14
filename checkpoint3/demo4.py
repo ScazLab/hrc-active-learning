@@ -5,6 +5,7 @@ from part_two import *
 from collections import defaultdict
 from collections import Counter
 
+
 NUMBER_INIT_USERS_PART_TWO = 3
 
 def execute_part_one_sim(myHTM):
@@ -30,15 +31,18 @@ def execute_part_two_sim(myHTM, f):
 
 	init_labels = []
 	for i in range(NUMBER_INIT_USERS_PART_TWO):
-		init_labels +=[(tuple(Oi), random.choice(possible_ai) ) for Oi in generate_valid_Oi_seq(myHTM, f) ]
+		init_labels +=[((timestep,tuple(Oi)), random.choice(possible_ai) ) for timestep, Oi in enumerate(generate_valid_Oi_seq(myHTM, f)) ]
+		# init_labels +=[(tuple(Oi), random.choice(possible_ai) ) for Oi in generate_valid_Oi_seq(myHTM, f)]
+	# print generate_valid_Oi_seq(myHTM, f)
+
 
 	user_pref_dict = defaultdict(Counter)
-	for Oi, ai in init_labels:
-		# user_pref_dict[Oi][ai] += 1
-		user_pref_dict[Oi].update(ai)
+	for (t, Oi), ai in init_labels:
+		user_pref_dict[(t,Oi)][ai] += 1
+		# user_pref_dict[(t,Oi)].update(ai)
 
-	# Oi_to_query = uncertainty_score(user_pref_dict, float(NUMBER_INIT_USERS_PART_TWO)/ 2)
-	Oi_to_query = uncertainty_score_2(user_pref_dict)
+	Oi_to_query = uncertainty_score(user_pref_dict, float(NUMBER_INIT_USERS_PART_TWO)/ 2)
+	# Oi_to_query = uncertainty_score_2(user_pref_dict)
 	return user_pref_dict, Oi_to_query
 
 def execute_part_three_sim(user_pref, query_vec):
@@ -46,14 +50,15 @@ def execute_part_three_sim(user_pref, query_vec):
 
 def main():
 	myHTM = example_HTM()
+	# print generate_rand_state_seq(myHTM)
 	
 	f, g = execute_part_one_sim(myHTM)
 	
 	user_pref_dict, query_vec = execute_part_two_sim(myHTM,f)
 	
 	mymatrix = []
-	for Oi in user_pref_dict.keys():
-		mymatrix += [[str(g[Oi]), str(query_vec[Oi]), str(user_pref_dict[Oi])]]
+	for t,Oi in sorted(user_pref_dict.keys(), key=lambda x: x[0]):
+		mymatrix += [[str(t), str(g[Oi]), str(query_vec[(t,Oi)]), str(user_pref_dict[(t, Oi)])]]
 	prettyprint(mymatrix)
 
 	execute_part_three_sim(user_pref_dict, query_vec)

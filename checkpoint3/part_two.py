@@ -29,20 +29,21 @@ def generate_valid_Oi_seq(htm, f):
 
 def uncertainty_score(user_pref_dict, thres):
 	uncertainty_dict = {}
-	for taskstep in user_pref_dict.keys():
+	for t,Oi in user_pref_dict.keys():
 		# print user_pref_dict[taskstep].most_common(1)[0][1]
-		if user_pref_dict[taskstep].most_common(1)[0][1] < thres:
-			uncertainty_dict[taskstep] = True
+		if user_pref_dict[(t,Oi)].most_common(1)[0][1] < thres:
+			uncertainty_dict[(t,Oi)] = True
 		else:
-			uncertainty_dict[taskstep] = False
+			uncertainty_dict[(t,Oi)] = False
 	# print uncertainty_dict
 	return uncertainty_dict
 
-def uncertainty_score_2(user_pref_dict): #threshold == len(userprefdict[Oi]) / 2 ; this for individual counts for supp actions
-	uncertainty_dict = {}
-	for taskstep in  user_pref_dict.keys():
-		if user_pref_dict[taskstep].most_common(1)[0][1] < float(len(user_pref_dict[taskstep])) / 2:
-			uncertainty_dict[taskstep] = True
-		else:
-			uncertainty_dict[taskstep] = False
-	return uncertainty_dict
+# def uncertainty_score_2(user_pref_dict): #inaccurate
+# 	uncertainty_dict = {}
+# 	for t, Oi in  user_pref_dict.keys():
+# 		# if user_pref_dict[(t,Oi)].most_common(1)[0][1] < float(len(user_pref_dict[(t,Oi)])) / 2:
+
+# 			uncertainty_dict[(t,Oi)] = True
+# 		else:
+# 			uncertainty_dict[(t,Oi)] = False
+# 	return uncertainty_dict
