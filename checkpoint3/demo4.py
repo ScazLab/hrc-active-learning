@@ -5,7 +5,7 @@ from part_two import *
 from collections import defaultdict
 from collections import Counter
 
-NUMBER_INIT_USERS_PART_TWO = 3.0
+NUMBER_INIT_USERS_PART_TWO = 3
 
 def execute_part_one_sim(myHTM):
 	S = get_leaves(myHTM) + ['UNKNOWN_STATE']
@@ -34,20 +34,28 @@ def execute_part_two_sim(myHTM, f):
 
 	user_pref_dict = defaultdict(Counter)
 	for Oi, ai in init_labels:
-		user_pref_dict[Oi][ai] += 1
+		# user_pref_dict[Oi][ai] += 1
+		user_pref_dict[Oi].update(ai)
 
-	Oi_to_query = uncertainty_score(user_pref_dict, NUMBER_USERS_PART_TWO / 2)
+	# Oi_to_query = uncertainty_score(user_pref_dict, float(NUMBER_INIT_USERS_PART_TWO)/ 2)
+	Oi_to_query = uncertainty_score_2(user_pref_dict)
 	return user_pref_dict, Oi_to_query
 
 def execute_part_three_sim(user_pref, query_vec):
-
+	return
 
 def main():
 	myHTM = example_HTM()
+	
 	f, g = execute_part_one_sim(myHTM)
+	
 	user_pref_dict, query_vec = execute_part_two_sim(myHTM,f)
+	
+	mymatrix = []
 	for Oi in user_pref_dict.keys():
-		print str(g[Oi]) + '\t' + user_pref_dict[Oi]
+		mymatrix += [[str(g[Oi]), str(query_vec[Oi]), str(user_pref_dict[Oi])]]
+	prettyprint(mymatrix)
+
 	execute_part_three_sim(user_pref_dict, query_vec)
 
 

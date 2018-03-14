@@ -6,7 +6,8 @@ import random
 
 
 def example_sup_actions():
-	return set(['wave', 'smile', 'hold', 'bring new part'])
+	# return set(['wave', 'smile', 'hold', 'bring new part'])
+	return set(['bring dowel', 'bring long dowel', 'bring screwdriver', 'bring top bracket', 'bring back bracket', 'bring front bracket', 'hold'])
 
 def generate_rand_state_seq(htm):
 	traj = []
@@ -36,4 +37,12 @@ def uncertainty_score(user_pref_dict, thres):
 			uncertainty_dict[taskstep] = False
 	# print uncertainty_dict
 	return uncertainty_dict
-		
+
+def uncertainty_score_2(user_pref_dict): #threshold == len(userprefdict[Oi]) / 2 ; this for individual counts for supp actions
+	uncertainty_dict = {}
+	for taskstep in  user_pref_dict.keys():
+		if user_pref_dict[taskstep].most_common(1)[0][1] < float(len(user_pref_dict[taskstep])) / 2:
+			uncertainty_dict[taskstep] = True
+		else:
+			uncertainty_dict[taskstep] = False
+	return uncertainty_dict

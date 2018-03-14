@@ -1,9 +1,14 @@
 from htm import *
 
 def example_HTM():
-	myHTM = HTM(ARROW)
-	myHTM.add_children([PARALLEL, "assemble seat", "assemble back", "varnish"])
-	myHTM.child(0).add_children(["assemble leg A", "assemble leg B"])
+	myHTM = HTM(PARALLEL)
+	# myHTM.add_children([PARALLEL, "assemble seat", "assemble back", "varnish"])
+	# myHTM.child(0).add_children(["assemble leg A", "assemble leg B"])
+	myHTM.add_children([ARROW, ARROW])
+	myHTM.child(0).add_children([PARALLEL, 'GP_seat', 'A_seat'])
+	myHTM.child(0).child(0).add_children(['GP_L1', 'GP_L2', 'GP_L3', 'GP_L4'])
+	myHTM.child(1).add_children([PARALLEL, 'GP_top', 'A_back'])
+	myHTM.child(1).child(0).add_children(['GP_BL', 'GP_BR'])
 	return myHTM
 
 def example_obs():
