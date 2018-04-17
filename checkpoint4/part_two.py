@@ -7,8 +7,8 @@ import random
 
 def example_sup_actions():
 	# return set(['wave', 'smile', 'hold', 'bring new part'])
-	# return set(['bring dowel', 'bring long dowel', 'bring screwdriver', 'bring top bracket', 'bring back bracket', 'bring front bracket', 'hold'])
-	return set(['act1', 'act2', 'act3', 'act4', 'act5', 'act6', 'act7', 'act8'])
+	return set(['dowel', 'long_dowel', 'screwdriver', 'top_bracket', 'back_bracket', 'front_bracket', 'hold', 'seat', 'back'])
+	# return set(['act1', 'act2', 'act3', 'act4', 'act5', 'act6', 'act7', 'act8'])
 
 def example_additional_features():
 	return ['seat_taken', '1dowel_taken', '2dowel_taken', '3dowel_taken', '4dowel_taken', 'screwdriver_taken', 'back_taken', '1frontb_taken', '2frontb_taken', '1backb_taken', '2backb_taken', '1topb_taken', '2topb_taken']
