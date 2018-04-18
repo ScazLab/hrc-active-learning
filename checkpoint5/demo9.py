@@ -145,7 +145,7 @@ def main():
             prettyprint(ui_pref,labels = ['Features of env', 'Supportive actions to deliver'] )
             print "Default model, for reference:"
             prettyprint(default_supp_actions,labels = ['Features of env', 'Supportive actions to deliver'] )
-        runs = runs = run_sim(ui_pref, default_supp_actions, verbose=False)
+        runs = run_sim(ui_pref, default_supp_actions, verbose=False)
         print str(runs) + " runs before success"
 
 
