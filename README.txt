@@ -15,3 +15,6 @@ Checkpoint 3: as per 3/12/2018 meeting with Corina
 	- if it works, add noise
 	- spend time working with Baxter
 
+Checkpoint4:
+
+

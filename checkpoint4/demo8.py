@@ -194,21 +194,7 @@ def main():
     model_of_supp_actions_for_Bob,q, w = execute_part_three_sim(Bob_traj, Bob_sim_Mondays, model_of_supp_actions_for_Bob, True)
     print str(q) + " queries"
     print str(w) + " incorrect actions"
-    # print "------Simulation 3-------"
-    # print "Showing convergence with both generated (but constant over 10 interactions) state seq and generated labels"
-    # gen_traj = generate_rand_state_seq(myHTM)
-    # gen_sim_truth = dict(zip(gen_traj, generate_reasonable_train_labels(gen_traj)))
-    # print "Generated truth labels for generated trajectory:"
-    # prettyprint(gen_sim_truth)
-    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, default_supp_actions, False)
-    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
-    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
-    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
-    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
-    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
-    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
-    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
-    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+
     print
     print "------Simulation 3------"
     print "Showing convergence with both generated (but constant over all interactions) state seq and generated labels"
@@ -227,21 +213,9 @@ def main():
         # prettyprint(d)
         runs = run_sim(t, l, d, False)
         print  str(runs) + " runs before success"
-    # t0 = generate_rand_state_seq(myHTM)
-    # l0 = dict(zip(t0, generate_reasonable_train_labels(t0)))
-    # d0 = deepcopy(default_supp_actions)
+
     print
     
-    # prettyprint(d0)
-    # runs= run_sim(t0, l0, d0, False)
-    # print "Worker: " + str(10) + "\t" + str(runs) + " runs before success"
-    # print
-    # print "Last worker's ground truth labels, for reference:"
-    # prettyprint(l0)
-    # print "Last worker's dict for supportive actions, after aggregating 'votes' towards their ground-truth labels"
-    # prettyprint(m0)
-
-    # generate_reasonable_train_labels(generate_rand_state_seq(myHTM))
 
 
 
