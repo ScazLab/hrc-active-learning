@@ -150,30 +150,46 @@ def main():
     print "Will query ('True') if did not have a majority among the supportive action labels given by the initial training interactions."
     prettyprint(uncertainty_score(default_supp_actions))
 
+    print
     print "=== PART THREE ==="
-    # print "------Simulation 1------"
-    # print "Simulate one interaction with worker Alice"
-    # Alice_traj = ['GP_BR', 'GP_BL', 'GP_top', 'A_back', 'GP_L2', 'GP_L3', 'GP_L1', 'GP_L4', 'GP_seat', 'A_seat']
-    # Alice_truth_labels = [('dowel','top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel', 'back'), ('hold',),('dowel','front_bracket'), ('dowel','back_bracket'),('dowel', 'front_bracket'),('dowel','back_bracket'),('seat',),('hold',)]
-    # Alice_sim = dict(zip(Alice_traj,Alice_truth_labels))
+    print "------Simulation 1------"
+    print "Simulate one interaction with worker Alice"
+    Alice_traj = ['GP_BR', 'GP_BL', 'GP_top', 'A_back', 'GP_L2', 'GP_L3', 'GP_L1', 'GP_L4', 'GP_seat', 'A_seat']
+    Alice_truth_labels = [('dowel','top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel', 'back'), ('hold',),('dowel','front_bracket'), ('dowel','back_bracket'),('dowel', 'front_bracket'),('dowel','back_bracket'),('seat',),('hold',)]
+    Alice_sim = dict(zip(Alice_traj,Alice_truth_labels))
+    alice_runs = run_sim(Alice_traj, Alice_sim, default_supp_actions, True)
+    print str(alice_runs) + " runs to convergence for Alice"
     # model_of_supp_actions_for_Alice = execute_part_three_sim(Alice_traj, Alice_sim, default_supp_actions, True)
     # print "Simulate 3 more interactions with worker Alice, where she follows the same trajectory (print suppressed)"
     # model_of_supp_actions_for_Alice, _, _  = execute_part_three_sim(Alice_traj, Alice_sim, model_of_supp_actions_for_Alice, False)
     # model_of_supp_actions_for_Alice _, _ = execute_part_three_sim(Alice_traj, Alice_sim, model_of_supp_actions_for_Alice, False)
     # model_of_supp_actions_for_Alice _, _ = execute_part_three_sim(Alice_traj, Alice_sim, model_of_supp_actions_for_Alice, False)
-    # print
-    # print "------Simulation 2------"
-    # print "Simulate four interactions with work Bob, whose task trajectories vary slightly (varied trajectory hardcoded)"
-    # Bob_traj = ['GP_BR', 'GP_BL', 'GP_top', 'A_back', 'GP_L2', 'GP_L3', 'GP_L1', 'GP_L4', 'GP_seat', 'A_seat']
-    # Bob_truth_labels_onMondays = [('dowel','top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel', 'back'), ('hold',),('dowel','front_bracket'), ('dowel','back_bracket'),('dowel', 'front_bracket'),('dowel','back_bracket'),('seat',),('hold',)]
-    # #same thing, but without holds
-    # Bob_truth_labels_onTuesdays = [('dowel','top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel', 'back'), (),('dowel','front_bracket'), ('dowel','back_bracket'),('dowel', 'front_bracket'),('dowel','back_bracket'),('seat',),()]
-    # Bob_sim_Mondays = dict(zip(Bob_traj,Bob_truth_labels_onMondays))
-    # Bob_sim_Tuesdays = dict(zip(Bob_traj,Bob_truth_labels_onTuesdays))
-    # model_of_supp_actions_for_Bob = execute_part_three_sim(Bob_traj, Bob_sim_Mondays, default_supp_actions, True)
-    # model_of_supp_actions_for_Bob = execute_part_three_sim(Bob_traj, Bob_sim_Tuesdays, model_of_supp_actions_for_Bob, True)
-    # model_of_supp_actions_for_Bob = execute_part_three_sim(Bob_traj, Bob_sim_Mondays, model_of_supp_actions_for_Bob, True)
-    # model_of_supp_actions_for_Bob = execute_part_three_sim(Bob_traj, Bob_sim_Mondays, model_of_supp_actions_for_Bob, True)
+    print
+    print "------Simulation 2------"
+    print "Simulate four interactions with work Bob, whose task trajectories vary slightly (varied trajectory hardcoded)"
+    Bob_traj = ['GP_BR', 'GP_BL', 'GP_top', 'A_back', 'GP_L2', 'GP_L3', 'GP_L1', 'GP_L4', 'GP_seat', 'A_seat']
+    Bob_truth_labels_onMondays = [('dowel','top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel', 'back'), ('hold',),('dowel','front_bracket'), ('dowel','back_bracket'),('dowel', 'front_bracket'),('dowel','back_bracket'),('seat',),('hold',)]
+    #same thing, but without holds
+    Bob_truth_labels_onTuesdays = [('dowel','top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel', 'back'), (),('dowel','front_bracket'), ('dowel','back_bracket'),('dowel', 'front_bracket'),('dowel','back_bracket'),('seat',),()]
+    Bob_sim_Mondays = dict(zip(Bob_traj,Bob_truth_labels_onMondays))
+    Bob_sim_Tuesdays = dict(zip(Bob_traj,Bob_truth_labels_onTuesdays))
+    # bob_runs = run_sim (Bob_traj, Bob_truth_labels_onMondays)
+    print "Run 1"
+    model_of_supp_actions_for_Bob, q, w = execute_part_three_sim(Bob_traj, Bob_sim_Mondays, default_supp_actions, True)
+    print str(q) + " queries"
+    print str(w) + " incorrect actions"
+    print "Run 2"
+    model_of_supp_actions_for_Bob, q, w= execute_part_three_sim(Bob_traj, Bob_sim_Tuesdays, model_of_supp_actions_for_Bob, True)
+    print str(q) + " queries"
+    print str(w) + " incorrect actions"
+    print "Run 3"
+    model_of_supp_actions_for_Bob,q, w = execute_part_three_sim(Bob_traj, Bob_sim_Mondays, model_of_supp_actions_for_Bob, True)
+    print str(q) + " queries"
+    print str(w) + " incorrect actions"
+    print "Run 4"
+    model_of_supp_actions_for_Bob,q, w = execute_part_three_sim(Bob_traj, Bob_sim_Mondays, model_of_supp_actions_for_Bob, True)
+    print str(q) + " queries"
+    print str(w) + " incorrect actions"
     # print "------Simulation 3-------"
     # print "Showing convergence with both generated (but constant over 10 interactions) state seq and generated labels"
     # gen_traj = generate_rand_state_seq(myHTM)
@@ -189,15 +205,16 @@ def main():
     # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
     # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
     # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+    print
     print "------Simulation 4------"
+    print "Default model, for reference:"
     prettyprint(default_supp_actions)
     print "Calculating completed_runs before zero queries and zero incorrect_actions"
     for i in range(10):
-        print "Worker: " + str(i)
         t = generate_rand_state_seq(myHTM)
         d = deepcopy(default_supp_actions)
         runs = run_sim(t, dict(zip(t, generate_reasonable_train_labels(t))), d, False)
-        print str(runs) + " runs before success"
+        print "Worker: " + str(i) + "\t" + str(runs) + " runs before success"
 
 
     # generate_reasonable_train_labels(generate_rand_state_seq(myHTM))
