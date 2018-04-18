@@ -8,7 +8,7 @@ from collections import Counter
 
 
 
-NUMBER_INIT_USERS_PART_TWO = 3
+NUMBER_INIT_USERS_PART_TWO = 1
 NUMBER_TRIALS_PART_THREE = 3
 
 """
@@ -16,6 +16,7 @@ Notes:
 change htm to GP_TOP before GP_BL, BR before robot demo
 take into account results of queries in part three more that default model?
 add 'don't care out of these two options' as a way to answer a query
+add 'was this order ok'  check for when labels aren't hardcoded. if 'no' update order directly or add this order tuple with vote=majority
 
 part 1 - Oi:htmleaf dict
 part 2 - htmleaf:supportiveaction dict, htmleaf:query?TorF dict
@@ -30,7 +31,7 @@ def user_name(num):
     return 'User ' + str(num)
 
 def execute_part_one_sim(myHTM):
-    S = get_leaves(myHTM) + ['UNKNOWN_STATE']
+    S = get_leaves(myHTM) 
     O = example_obs()
     
     # assume found distinct mapping, anything out of the set Oi is an unknown human state
@@ -67,54 +68,92 @@ def execute_part_two_sim(myHTM, f):
     #assume instead of supportive actions being a set, that it is a list - order matters and repeats of a certain supportive aciton can occue
     #might just want to make this part 1 training! might make sense
 
+
     #with holds
     train1 = zip(['GP_L2', 'GP_L3', 'GP_L4', 'GP_L1', 'GP_seat', 'A_seat', 'GP_BR', 'GP_BL', 'GP_top', 'A_back'],[('dowel', 'screwdriver', 'front_bracket'),('dowel', 'back_bracket'),('dowel', 'back_bracket'),('dowel', 'front_bracket'),('seat',),('hold',),('dowel',), ('dowel',), ('long_dowel', 'top_bracket','top_bracket', 'back'), ('hold',)])
     #without holds
-    train2 = zip(['GP_BL', 'GP_BR', 'GP_top', 'A_back', 'GP_L2', 'GP_L3', 'GP_L4', 'GP_L1', 'GP_seat', 'A_seat'],[Counter(['dowel', 'screwdriver', 'top_bracket']), Counter(['dowel', 'top_bracket']), Counter(['long_dowel','back']), Counter([]), Counter(['dowel', 'front_bracket']), Counter(['dowel', 'back_bracket']), Counter(['dowel', 'back_bracket']), Counter(['dowel', 'front_bracket']), Counter(['seat']), Counter([])])
+    train2 = zip(['GP_BL', 'GP_BR', 'GP_top', 'A_back', 'GP_L2', 'GP_L3', 'GP_L4', 'GP_L1', 'GP_seat', 'A_seat'],[('dowel', 'top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel','back'), (), ('dowel', 'front_bracket'), ('dowel', 'back_bracket'), ('dowel', 'back_bracket'), ('dowel', 'front_bracket'), ('seat',), ()])
 
     #without holds
-    train3 = zip(['GP_BR', 'GP_BL', 'GP_top', 'A_back', 'GP_L4', 'GP_L1', 'GP_L2', 'GP_L3', 'GP_seat', 'A_seat'],[Counter(['dowel','top_bracket','screwdriver']), Counter(['dowel','top_bracket']),Counter(['long_dowel','back']),Counter([]), Counter(['dowel','back_bracket']), Counter(['dowel','front_bracket']),Counter(['dowel','front_bracket']),Counter(['dowel','back_bracket']),Counter(['seat']), Counter([])])
+    train3 = zip(['GP_BR', 'GP_BL', 'GP_top', 'A_back', 'GP_L4', 'GP_L1', 'GP_L2', 'GP_L3', 'GP_seat', 'A_seat'],[('dowel','top_bracket','screwdriver'), ('dowel','top_bracket'),('long_dowel','back'),(), ('dowel','back_bracket'), ('dowel','front_bracket'),('dowel','front_bracket'),('dowel','back_bracket'),('seat',), ()])
 
     # prettyprint(train1)
 
     default_supp_actions = defaultdict(Counter)
-    for (htmleaf, supp_acts) in train1:
+    for (htmleaf, supp_acts) in train1 + train2 + train3:
         default_supp_actions[htmleaf][supp_acts] += 1
-    prettyprint(default_supp_actions)
 
-    # user_pref_dict = defaultdict(Counter)
-    # for tup, ai in init_labels:
-    #     user_pref_dict[tup][ai] += 1
-    #     # user_pref_dict[(t,Oi)].update(ai)
+    # tasksteps_to_query = uncertainty_score(default_supp_actions)
+    return default_supp_actions
 
-    # Oi_to_query = uncertainty_score(user_pref_dict, float(NUMBER_INIT_USERS_PART_TWO)/ 2)
-    # # Oi_to_query = uncertainty_score_2(user_pref_dict)
-    # return possible_ai, user_pref_dict, Oi_to_query
+def execute_part_three_sim(new_traj, new_labels_seq, old_supp_acts_model, verbose_flag):
+    tasksteps_to_query = uncertainty_score(old_supp_acts_model)
+    new_supp_acts_model = old_supp_acts_model
+    total_queries = 0
+    for taskstep in new_traj:
+        if verbose_flag: print "[Human worker task state: " + str(taskstep) + "]"
+        if tasksteps_to_query[taskstep]:
+            if verbose_flag: print "Robot:What can I do to help?" + " -> Human worker's answer: " + str(new_labels_seq[taskstep]) 
+            if verbose_flag: print "[Robot provides supportive action: " + str(new_labels_seq[taskstep]) + "]"
+            new_supp_acts_model[taskstep][new_labels_seq[taskstep]] += 1
+            total_queries += 1
 
-def execute_part_three_sim(user_pref, query_vec, possible_ai):
-    print user_pref
-    for user in range(NUMBER_INIT_USERS_PART_TWO):
-        for trial in range(NUMBER_TRIALS_PART_THREE):
-            num_queries = 0
-            for t in sorted(user_pref.keys()):
-                print t
-                if query_vec[t] == True:
-                    num_queries += 1
-                    #CALL PART FOUR SIM HERE instead
-                    # #user_pref[t][random.choice(possible_ai)] += 1
-            print 'Number of queries for ' + user_name(user) + ' - Trial ' + str(trial) + ': ' + str(num_queries)
-            # print user_pref
+        else:
+            if verbose_flag: print "[Robot provides supportive action: " + str(old_supp_acts_model[taskstep].most_common(1)[0][0]) + "]"
+            if old_supp_acts_model[taskstep] != new_labels_seq[taskstep]:
+                if verbose_flag: print "[Human wanted " + str(new_labels_seq[taskstep]) + "]"
+                if verbose_flag: print "Robot:Sorry for not acting as intended. Will try to keep this in mind for next time, but it may take a few times to get right."
+                new_supp_acts_model[taskstep][new_labels_seq[taskstep]] += 1
+            else:
+                if verbose_flag: print "[Robot acted as intended.]"
+    print str(total_queries) + " total queries made."
+    return new_supp_acts_model
+
+
+    # for user in range(NUMBER_INIT_USERS_PART_TWO):
+    #     for trial in range(NUMBER_TRIALS_PART_THREE):
+    #         num_queries = 0
+    #         for t in sorted(user_pref.keys()):
+    #             print t
+    #             if query_vec[t] == True:
+    #                 num_queries += 1
+    #                 #CALL PART FOUR SIM HERE instead
+    #                 # #user_pref[t][random.choice(possible_ai)] += 1
+    #         print 'Number of queries for ' + user_name(user) + ' - Trial ' + str(trial) + ': ' + str(num_queries)
+    #         # print user_pref
+
 
 
 def main():
     myHTM = example_HTM()
-    # print generate_rand_state_seq(myHTM)
-    # print generate_rand_state_seq(myHTM)
-    # print generate_rand_state_seq(myHTM)
-    # print generate_rand_state_seq(myHTM)
+    print "=== PART ONE ==="
     f, g = execute_part_one_sim(myHTM)
-    # print f
-    execute_part_two_sim(myHTM, f)
+    print "Assumption:there is a one-to-one matching between sets of observations of the environment and the state of the task. "
+    prettyprint(f)
+
+
+    print "=== PART TWO ==="
+    default_supp_actions = execute_part_two_sim(myHTM, f)
+    print "Default Model: Results of 3 training interactions (interactions where a query for supportive action labels is raised for every state of the task)"
+    prettyprint(default_supp_actions)
+    print "Given this model, whether the robot will query the user at each task state:"
+    print "Will query ('True') if did not have a majority among the supportive action labels given by the initial training interactions."
+    prettyprint(uncertainty_score(default_supp_actions))
+
+    print "=== PART THREE ==="
+    print "Simulate one interaction with worker Alice"
+    Alice_traj = ['GP_BR', 'GP_BL', 'GP_top', 'A_back', 'GP_L2', 'GP_L3', 'GP_L1', 'GP_L4', 'GP_seat', 'A_seat']
+    Alice_truth_labels = [('dowel','top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel', 'back'), ('hold',),('dowel','front_bracket'), ('dowel','back_bracket'),('dowel', 'front_bracket'),('dowel','back_bracket'),('seat',),('hold')]
+    Alice_sim = dict(zip(Alice_traj,Alice_truth_labels))
+
+    model_of_supp_actions_for_Alice = execute_part_three_sim(Alice_traj, Alice_sim, default_supp_actions, True)
+    # print "Simulate 3 more interactions with worker Alice, where she follows the same trajectory (print suppressed)"
+    # model_of_supp_actions_for_Alice = execute_part_three_sim(Alice_traj, Alice_sim, model_of_supp_actions_for_Alice)
+
+    # prettyprint(default_supp_actions)
+    # default_supp_actions['GP_L1'][('hold',)] += 1
+    # prettyprint(default_supp_actions)
+    # prettyprint(uncertainty_score(default_supp_actions))
     
     # possible_ai, user_pref_dict, query_vec = execute_part_two_sim(myHTM,f)
     # # print user_pref_dict

@@ -36,33 +36,12 @@ def generate_valid_Oi_seq(htm, f):
 	Oi_seq = [f[si] for si in traj]
 	return Oi_seq
 
-def uncertainty_score(user_pref_dict, thres):
+def uncertainty_score(user_pref_dict):
 	uncertainty_dict = {}
 	for k in user_pref_dict.keys():
-		# print user_pref_dict[taskstep].most_common(1)[0][1]
-		if user_pref_dict[k].most_common(1)[0][1] < thres:
+		if user_pref_dict[k].most_common(1)[0][1] <= float(sum(user_pref_dict[k].values()))/2.0:
 			uncertainty_dict[k] = True
 		else:
 			uncertainty_dict[k] = False
-	# print uncertainty_dict
 	return uncertainty_dict
 
-# def uncertainty_score_2(user_pref_dict): #inaccurate
-# 	uncertainty_dict = {}
-# 	for t, Oi in  user_pref_dict.keys():
-# 		# if user_pref_dict[(t,Oi)].most_common(1)[0][1] < float(len(user_pref_dict[(t,Oi)])) / 2:
-
-# 			uncertainty_dict[(t,Oi)] = True
-# 		else:
-# 			uncertainty_dict[(t,Oi)] = False
-# 	return uncertainty_dict
-def uncertainty_score_demo6(user_pref_dict, thres):
-	uncertainty_dict = {}
-	for k in user_pref_dict.keys():
-		# print user_pref_dict[taskstep].most_common(1)[0][1]
-		if user_pref_dict[k].most_common(1)[0][1] < thres:
-			uncertainty_dict[k] = True
-		else:
-			uncertainty_dict[k] = False
-	# print uncertainty_dict
-	return uncertainty_dict
