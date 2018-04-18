@@ -5,6 +5,7 @@ from part_two import *
 
 from collections import defaultdict
 from collections import Counter
+from copy import deepcopy
 
 
 
@@ -113,9 +114,24 @@ def execute_part_three_sim(new_traj, new_labels_seq, old_supp_acts_model, verbos
                 incorrect_actions += 1
             else:
                 if verbose_flag: print "[Robot acted as intended.]"
-    print str(total_queries) + " total queries made."
-    print str(incorrect_actions) + " incorrect actions."
-    return new_supp_acts_model
+    # print str(total_queries) + " total queries made."
+    # print str(incorrect_actions) + " incorrect actions."
+    return new_supp_acts_model, total_queries, incorrect_actions
+
+def run_sim(new_traj, new_labels_seq, def_supp_acts_model, verbose_flag):
+    # prettyprint(def_supp_acts_model)
+
+    completed_runs = 0
+    # print "Run " + str(completed_runs + 1)
+    # new_supp_acts_model = 
+    new_supp_acts_model, total_queries, incorrect_actions = execute_part_three_sim(new_traj, new_labels_seq, def_supp_acts_model, verbose_flag)
+    completed_runs += 1
+    while completed_runs < 20 and (total_queries > 0 or incorrect_actions > 0 ):
+        # print "Run " + str(completed_runs + 1)
+        new_supp_acts_model, total_queries, incorrect_actions = execute_part_three_sim(new_traj, new_labels_seq, new_supp_acts_model, verbose_flag)
+        completed_runs += 1
+    return completed_runs
+
 
 
 def main():
@@ -135,44 +151,54 @@ def main():
     prettyprint(uncertainty_score(default_supp_actions))
 
     print "=== PART THREE ==="
-    print "------Simulation 1------"
-    print "Simulate one interaction with worker Alice"
-    Alice_traj = ['GP_BR', 'GP_BL', 'GP_top', 'A_back', 'GP_L2', 'GP_L3', 'GP_L1', 'GP_L4', 'GP_seat', 'A_seat']
-    Alice_truth_labels = [('dowel','top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel', 'back'), ('hold',),('dowel','front_bracket'), ('dowel','back_bracket'),('dowel', 'front_bracket'),('dowel','back_bracket'),('seat',),('hold',)]
-    Alice_sim = dict(zip(Alice_traj,Alice_truth_labels))
-    model_of_supp_actions_for_Alice = execute_part_three_sim(Alice_traj, Alice_sim, default_supp_actions, True)
-    print "Simulate 3 more interactions with worker Alice, where she follows the same trajectory (print suppressed)"
-    model_of_supp_actions_for_Alice = execute_part_three_sim(Alice_traj, Alice_sim, model_of_supp_actions_for_Alice, False)
-    model_of_supp_actions_for_Alice = execute_part_three_sim(Alice_traj, Alice_sim, model_of_supp_actions_for_Alice, False)
-    model_of_supp_actions_for_Alice = execute_part_three_sim(Alice_traj, Alice_sim, model_of_supp_actions_for_Alice, False)
-    print
-    print "------Simulation 2------"
-    print "Simulate four interactions with work Bob, whose task trajectories vary slightly (varied trajectory hardcoded)"
-    Bob_traj = ['GP_BR', 'GP_BL', 'GP_top', 'A_back', 'GP_L2', 'GP_L3', 'GP_L1', 'GP_L4', 'GP_seat', 'A_seat']
-    Bob_truth_labels_onMondays = [('dowel','top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel', 'back'), ('hold',),('dowel','front_bracket'), ('dowel','back_bracket'),('dowel', 'front_bracket'),('dowel','back_bracket'),('seat',),('hold',)]
-    #same thing, but without holds
-    Bob_truth_labels_onTuesdays = [('dowel','top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel', 'back'), (),('dowel','front_bracket'), ('dowel','back_bracket'),('dowel', 'front_bracket'),('dowel','back_bracket'),('seat',),()]
-    Bob_sim_Mondays = dict(zip(Bob_traj,Bob_truth_labels_onMondays))
-    Bob_sim_Tuesdays = dict(zip(Bob_traj,Bob_truth_labels_onTuesdays))
-    model_of_supp_actions_for_Bob = execute_part_three_sim(Bob_traj, Bob_sim_Mondays, default_supp_actions, True)
-    model_of_supp_actions_for_Bob = execute_part_three_sim(Bob_traj, Bob_sim_Tuesdays, model_of_supp_actions_for_Bob, True)
-    model_of_supp_actions_for_Bob = execute_part_three_sim(Bob_traj, Bob_sim_Mondays, model_of_supp_actions_for_Bob, True)
-    model_of_supp_actions_for_Bob = execute_part_three_sim(Bob_traj, Bob_sim_Mondays, model_of_supp_actions_for_Bob, True)
-    print "------Simulation 3-------"
-    print "Showing convergence with both generated (but constant over 10 interactions) state seq and generated labels"
-    gen_traj = generate_rand_state_seq(myHTM)
-    gen_sim_truth = dict(zip(gen_traj, generate_reasonable_train_labels(gen_traj)))
-    print "Generated truth labels for generated trajectory:"
-    prettyprint(gen_sim_truth)
-    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, default_supp_actions, False)
-    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
-    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
-    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
-    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
-    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
-    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
-    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
-    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+    # print "------Simulation 1------"
+    # print "Simulate one interaction with worker Alice"
+    # Alice_traj = ['GP_BR', 'GP_BL', 'GP_top', 'A_back', 'GP_L2', 'GP_L3', 'GP_L1', 'GP_L4', 'GP_seat', 'A_seat']
+    # Alice_truth_labels = [('dowel','top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel', 'back'), ('hold',),('dowel','front_bracket'), ('dowel','back_bracket'),('dowel', 'front_bracket'),('dowel','back_bracket'),('seat',),('hold',)]
+    # Alice_sim = dict(zip(Alice_traj,Alice_truth_labels))
+    # model_of_supp_actions_for_Alice = execute_part_three_sim(Alice_traj, Alice_sim, default_supp_actions, True)
+    # print "Simulate 3 more interactions with worker Alice, where she follows the same trajectory (print suppressed)"
+    # model_of_supp_actions_for_Alice, _, _  = execute_part_three_sim(Alice_traj, Alice_sim, model_of_supp_actions_for_Alice, False)
+    # model_of_supp_actions_for_Alice _, _ = execute_part_three_sim(Alice_traj, Alice_sim, model_of_supp_actions_for_Alice, False)
+    # model_of_supp_actions_for_Alice _, _ = execute_part_three_sim(Alice_traj, Alice_sim, model_of_supp_actions_for_Alice, False)
+    # print
+    # print "------Simulation 2------"
+    # print "Simulate four interactions with work Bob, whose task trajectories vary slightly (varied trajectory hardcoded)"
+    # Bob_traj = ['GP_BR', 'GP_BL', 'GP_top', 'A_back', 'GP_L2', 'GP_L3', 'GP_L1', 'GP_L4', 'GP_seat', 'A_seat']
+    # Bob_truth_labels_onMondays = [('dowel','top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel', 'back'), ('hold',),('dowel','front_bracket'), ('dowel','back_bracket'),('dowel', 'front_bracket'),('dowel','back_bracket'),('seat',),('hold',)]
+    # #same thing, but without holds
+    # Bob_truth_labels_onTuesdays = [('dowel','top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel', 'back'), (),('dowel','front_bracket'), ('dowel','back_bracket'),('dowel', 'front_bracket'),('dowel','back_bracket'),('seat',),()]
+    # Bob_sim_Mondays = dict(zip(Bob_traj,Bob_truth_labels_onMondays))
+    # Bob_sim_Tuesdays = dict(zip(Bob_traj,Bob_truth_labels_onTuesdays))
+    # model_of_supp_actions_for_Bob = execute_part_three_sim(Bob_traj, Bob_sim_Mondays, default_supp_actions, True)
+    # model_of_supp_actions_for_Bob = execute_part_three_sim(Bob_traj, Bob_sim_Tuesdays, model_of_supp_actions_for_Bob, True)
+    # model_of_supp_actions_for_Bob = execute_part_three_sim(Bob_traj, Bob_sim_Mondays, model_of_supp_actions_for_Bob, True)
+    # model_of_supp_actions_for_Bob = execute_part_three_sim(Bob_traj, Bob_sim_Mondays, model_of_supp_actions_for_Bob, True)
+    # print "------Simulation 3-------"
+    # print "Showing convergence with both generated (but constant over 10 interactions) state seq and generated labels"
+    # gen_traj = generate_rand_state_seq(myHTM)
+    # gen_sim_truth = dict(zip(gen_traj, generate_reasonable_train_labels(gen_traj)))
+    # print "Generated truth labels for generated trajectory:"
+    # prettyprint(gen_sim_truth)
+    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, default_supp_actions, False)
+    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+    # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+    print "------Simulation 4------"
+    prettyprint(default_supp_actions)
+    print "Calculating completed_runs before zero queries and zero incorrect_actions"
+    for i in range(10):
+        print "Worker: " + str(i)
+        t = generate_rand_state_seq(myHTM)
+        d = deepcopy(default_supp_actions)
+        runs = run_sim(t, dict(zip(t, generate_reasonable_train_labels(t))), d, False)
+        print str(runs) + " runs before success"
+
 
     # generate_reasonable_train_labels(generate_rand_state_seq(myHTM))
 
