@@ -90,6 +90,7 @@ def execute_part_three_sim(new_traj, new_labels_seq, old_supp_acts_model, verbos
     tasksteps_to_query = uncertainty_score(old_supp_acts_model)
     new_supp_acts_model = old_supp_acts_model
     total_queries = 0
+    incorrect_actions = 0
     for taskstep in new_traj:
         if verbose_flag: print "[Human worker task state: " + str(taskstep) + "]"
         if tasksteps_to_query[taskstep]:
@@ -100,13 +101,15 @@ def execute_part_three_sim(new_traj, new_labels_seq, old_supp_acts_model, verbos
 
         else:
             if verbose_flag: print "[Robot provides supportive action: " + str(old_supp_acts_model[taskstep].most_common(1)[0][0]) + "]"
-            if old_supp_acts_model[taskstep] != new_labels_seq[taskstep]:
+            if old_supp_acts_model[taskstep].most_common(1)[0][0] != new_labels_seq[taskstep]:
                 if verbose_flag: print "[Human wanted " + str(new_labels_seq[taskstep]) + "]"
                 if verbose_flag: print "Robot:Sorry for not acting as intended. Will try to keep this in mind for next time, but it may take a few times to get right."
                 new_supp_acts_model[taskstep][new_labels_seq[taskstep]] += 1
+                incorrect_actions += 1
             else:
                 if verbose_flag: print "[Robot acted as intended.]"
     print str(total_queries) + " total queries made."
+    print str(incorrect_actions) + " incorrect actions."
     return new_supp_acts_model
 
 
@@ -143,12 +146,14 @@ def main():
     print "=== PART THREE ==="
     print "Simulate one interaction with worker Alice"
     Alice_traj = ['GP_BR', 'GP_BL', 'GP_top', 'A_back', 'GP_L2', 'GP_L3', 'GP_L1', 'GP_L4', 'GP_seat', 'A_seat']
-    Alice_truth_labels = [('dowel','top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel', 'back'), ('hold',),('dowel','front_bracket'), ('dowel','back_bracket'),('dowel', 'front_bracket'),('dowel','back_bracket'),('seat',),('hold')]
+    Alice_truth_labels = [('dowel','top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel', 'back'), ('hold',),('dowel','front_bracket'), ('dowel','back_bracket'),('dowel', 'front_bracket'),('dowel','back_bracket'),('seat',),('hold',)]
     Alice_sim = dict(zip(Alice_traj,Alice_truth_labels))
 
     model_of_supp_actions_for_Alice = execute_part_three_sim(Alice_traj, Alice_sim, default_supp_actions, True)
-    # print "Simulate 3 more interactions with worker Alice, where she follows the same trajectory (print suppressed)"
-    # model_of_supp_actions_for_Alice = execute_part_three_sim(Alice_traj, Alice_sim, model_of_supp_actions_for_Alice)
+    print "Simulate 3 more interactions with worker Alice, where she follows the same trajectory (print suppressed)"
+    model_of_supp_actions_for_Alice = execute_part_three_sim(Alice_traj, Alice_sim, model_of_supp_actions_for_Alice, False)
+    model_of_supp_actions_for_Alice = execute_part_three_sim(Alice_traj, Alice_sim, model_of_supp_actions_for_Alice, False)
+    model_of_supp_actions_for_Alice = execute_part_three_sim(Alice_traj, Alice_sim, model_of_supp_actions_for_Alice, False)
 
     # prettyprint(default_supp_actions)
     # default_supp_actions['GP_L1'][('hold',)] += 1
