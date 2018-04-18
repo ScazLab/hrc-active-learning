@@ -94,6 +94,15 @@ def generate_user(traj):
 	return zip(feature_seq, labels)
 
 
+# def uncertainty_score(user_pref_dict):
+# 	uncertainty_dict = {}
+# 	for k in user_pref_dict.keys():
+# 		if user_pref_dict[k].most_common(1)[0][1] <= float(sum(user_pref_dict[k].values()))/2.0:
+# 			uncertainty_dict[k] = True
+# 		else:
+# 			uncertainty_dict[k] = False
+# 	return uncertainty_dict
+
 def uncertainty_score(user_pref_dict):
 	uncertainty_dict = {}
 	for k in user_pref_dict.keys():
