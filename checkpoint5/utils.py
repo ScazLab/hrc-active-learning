@@ -4,12 +4,6 @@ def powerset(iterable):
 	s = list(iterable)
 	return chain.from_iterable(combinations(s,r) for r in range(1, len(s) + 1))
 
-# matrix = [
-#    ["Ah!",  "We do have some Camembert", "sir"],
-#    ["It's a bit", "runny", "sir"],
-#    ["Well,",  "as a matter of fact it's", "very runny, sir"],
-#    ["I think it's runnier",  "than you",  "like it, sir"]
-# ]
 def prettyprint(matrix):
 	if isinstance(matrix, dict):
 		for key in matrix.keys():

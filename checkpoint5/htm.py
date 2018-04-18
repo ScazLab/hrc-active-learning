@@ -33,3 +33,12 @@ class HTM(object):
         for child in self.children:
             s += child.__str__(level+1)
         return s
+
+    def get_leaves(self):
+        leaves = []
+        for child in self.children:
+            if len(child.children) ==0 :
+                leaves.append(child.data)
+            else:
+                leaves += child.get_leaves()
+        return leaves

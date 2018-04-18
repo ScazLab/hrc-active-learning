@@ -1,6 +1,7 @@
 from htm import *
+import random
 
-def example_HTM():
+def chair_task_HTM():
 	myHTM = HTM(PARALLEL)
 	# myHTM.add_children([PARALLEL, "assemble seat", "assemble back", "varnish"])
 	# myHTM.child(0).add_children(["assemble leg A", "assemble leg B"])
@@ -11,18 +12,22 @@ def example_HTM():
 	myHTM.child(1).child(0).add_children(['GP_BL', 'GP_BR'])
 	return myHTM
 
-def example_obs():
-	return ['ob1', 'ob2', 'ob3', 'ob4', 'ob5', 'ob6', 'ob7', 'ob8', 'ob9']
-	# return ['ob1', 'ob2', 'ob3', 'ob4', 'ob5', 'ob6', 'ob7','seat_taken', '1dowel_taken', '2dowel_taken', '3dowel_taken', '4dowel_taken', 'screwdriver_taken', 'back_taken', '1frontb_taken', '2frontb_taken', '1backb_taken', '2backb_taken', '1topb_taken', '2topb_taken']
 
-def get_leaves(htm):
-	leaves = []
-	for child in htm.children:
-		if len(child.children) ==0 :
-			leaves.append(child.data)
-		else:
-			leaves += get_leaves(child)
-	return leaves
+def chair_task_features():
+	possible_feats = ['screwdriver_taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'longdowel_taken', 'frontb_1taken', 'frontb_2taken', 'backb_1taken', 'backb_2taken', 'seat_taken', 'back_taken', 'topb_1taken', 'topb_2taken', 'hold_taken']
+	return sorted(possible_feats)
+
+def generate_rand_state_seq(htm):
+	traj = []
+	if htm.data == ARROW:
+		for child in htm.children:
+			traj.extend(generate_rand_state_seq(child))
+	elif htm.data == PARALLEL:
+		for child in random.sample(htm.children, len(htm.children)):
+			traj.extend(generate_rand_state_seq(child))
+	else:
+		traj += [htm.data]
+	return traj
 
 
 
