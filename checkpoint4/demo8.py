@@ -68,14 +68,20 @@ def execute_part_two_sim(myHTM, f):
     #might just want to make this part 1 training! might make sense
 
 
-    #with holds
-    train1 = zip(['GP_L2', 'GP_L3', 'GP_L4', 'GP_L1', 'GP_seat', 'A_seat', 'GP_BR', 'GP_BL', 'GP_top', 'A_back'],[('dowel', 'screwdriver', 'front_bracket'),('dowel', 'back_bracket'),('dowel', 'back_bracket'),('dowel', 'front_bracket'),('seat',),('hold',),('dowel',), ('dowel',), ('long_dowel', 'top_bracket','top_bracket', 'back'), ('hold',)])
-    #without holds
-    train2 = zip(['GP_BL', 'GP_BR', 'GP_top', 'A_back', 'GP_L2', 'GP_L3', 'GP_L4', 'GP_L1', 'GP_seat', 'A_seat'],[('dowel', 'top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel','back'), (), ('dowel', 'front_bracket'), ('dowel', 'back_bracket'), ('dowel', 'back_bracket'), ('dowel', 'front_bracket'), ('seat',), ()])
+    # #with holds
+    # train1 = zip(['GP_L2', 'GP_L3', 'GP_L4', 'GP_L1', 'GP_seat', 'A_seat', 'GP_BR', 'GP_BL', 'GP_top', 'A_back'],[('dowel', 'screwdriver', 'front_bracket'),('dowel', 'back_bracket'),('dowel', 'back_bracket'),('dowel', 'front_bracket'),('seat',),('hold',),('dowel',), ('dowel',), ('long_dowel', 'top_bracket','top_bracket', 'back'), ('hold',)])
+    # #without holds
+    # train2 = zip(['GP_BL', 'GP_BR', 'GP_top', 'A_back', 'GP_L2', 'GP_L3', 'GP_L4', 'GP_L1', 'GP_seat', 'A_seat'],[('dowel', 'top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel','back'), (), ('dowel', 'front_bracket'), ('dowel', 'back_bracket'), ('dowel', 'back_bracket'), ('dowel', 'front_bracket'), ('seat',), ()])
 
-    #without holds
-    train3 = zip(['GP_BR', 'GP_BL', 'GP_top', 'A_back', 'GP_L4', 'GP_L1', 'GP_L2', 'GP_L3', 'GP_seat', 'A_seat'],[('dowel','top_bracket','screwdriver'), ('dowel','top_bracket'),('long_dowel','back'),(), ('dowel','back_bracket'), ('dowel','front_bracket'),('dowel','front_bracket'),('dowel','back_bracket'),('seat',), ()])
-
+    # #without holds
+    # train3 = zip(['GP_BR', 'GP_BL', 'GP_top', 'A_back', 'GP_L4', 'GP_L1', 'GP_L2', 'GP_L3', 'GP_seat', 'A_seat'],[('dowel','top_bracket','screwdriver'), ('dowel','top_bracket'),('long_dowel','back'),(), ('dowel','back_bracket'), ('dowel','front_bracket'),('dowel','front_bracket'),('dowel','back_bracket'),('seat',), ()])
+    t1 = generate_rand_state_seq(myHTM)
+    # print t1
+    train1 = zip(t1, generate_reasonable_train_labels(t1))
+    t2 = generate_rand_state_seq(myHTM)
+    train2 = zip(t2, generate_reasonable_train_labels(t2))
+    t3 = generate_rand_state_seq(myHTM)
+    train3 = zip(t3, generate_reasonable_train_labels(t3))
     # prettyprint(train1)
 
     default_supp_actions = defaultdict(Counter)
@@ -152,8 +158,23 @@ def main():
     model_of_supp_actions_for_Bob = execute_part_three_sim(Bob_traj, Bob_sim_Tuesdays, model_of_supp_actions_for_Bob, True)
     model_of_supp_actions_for_Bob = execute_part_three_sim(Bob_traj, Bob_sim_Mondays, model_of_supp_actions_for_Bob, True)
     model_of_supp_actions_for_Bob = execute_part_three_sim(Bob_traj, Bob_sim_Mondays, model_of_supp_actions_for_Bob, True)
+    print "------Simulation 3-------"
+    print "Showing convergence with both generated (but constant over 10 interactions) state seq and generated labels"
+    gen_traj = generate_rand_state_seq(myHTM)
+    gen_sim_truth = dict(zip(gen_traj, generate_reasonable_train_labels(gen_traj)))
+    print "Generated truth labels for generated trajectory:"
+    prettyprint(gen_sim_truth)
+    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, default_supp_actions, False)
+    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
+    model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
 
-    generate_reasonable_train_labels(generate_rand_state_seq(myHTM))
+    # generate_reasonable_train_labels(generate_rand_state_seq(myHTM))
 
 
 
