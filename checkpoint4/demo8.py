@@ -8,10 +8,6 @@ from collections import Counter
 from copy import deepcopy
 
 
-
-NUMBER_INIT_USERS_PART_TWO = 1
-NUMBER_TRIALS_PART_THREE = 3
-
 """
 Notes:
 change htm to GP_TOP before GP_BL, BR before robot demo
@@ -43,7 +39,7 @@ def execute_part_one_sim(myHTM):
     f_sim = {taskstep: list(obs) for (taskstep, obs) in assumption1}
     
     # because of assumption1, g_sim is just an inverse
-    # TO BE CHANGED IN demo8
+    # TO BE CHANGED IN demo9
     g_sim = {Oi:taskstep for (taskstep, Oi) in assumption1}
     for Oi in list(powerset(O)):
         if Oi not in g_sim.keys():
