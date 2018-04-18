@@ -116,19 +116,21 @@ def execute_part_three_sim(new_traj, new_labels_seq, old_supp_acts_model, verbos
                 if verbose_flag: print "[Robot acted as intended.]"
     # print str(total_queries) + " total queries made."
     # print str(incorrect_actions) + " incorrect actions."
+    if total_queries ==0 and incorrect_actions == 0:
+        prettyprint(new_supp_acts_model)
     return new_supp_acts_model, total_queries, incorrect_actions
 
 def run_sim(new_traj, new_labels_seq, def_supp_acts_model, verbose_flag):
     # prettyprint(def_supp_acts_model)
-
+    supp_acts_model_to_update = deepcopy(def_supp_acts_model)
     completed_runs = 0
     # print "Run " + str(completed_runs + 1)
     # new_supp_acts_model = 
-    new_supp_acts_model, total_queries, incorrect_actions = execute_part_three_sim(new_traj, new_labels_seq, def_supp_acts_model, verbose_flag)
+    supp_acts_model_to_update, total_queries, incorrect_actions = execute_part_three_sim(new_traj, new_labels_seq, supp_acts_model_to_update, verbose_flag)
     completed_runs += 1
     while completed_runs < 20 and (total_queries > 0 or incorrect_actions > 0 ):
         # print "Run " + str(completed_runs + 1)
-        new_supp_acts_model, total_queries, incorrect_actions = execute_part_three_sim(new_traj, new_labels_seq, new_supp_acts_model, verbose_flag)
+        supp_acts_model_to_update, total_queries, incorrect_actions = execute_part_three_sim(new_traj, new_labels_seq, supp_acts_model_to_update, verbose_flag)
         completed_runs += 1
     return completed_runs
 
@@ -164,9 +166,10 @@ def main():
     # model_of_supp_actions_for_Alice, _, _  = execute_part_three_sim(Alice_traj, Alice_sim, model_of_supp_actions_for_Alice, False)
     # model_of_supp_actions_for_Alice _, _ = execute_part_three_sim(Alice_traj, Alice_sim, model_of_supp_actions_for_Alice, False)
     # model_of_supp_actions_for_Alice _, _ = execute_part_three_sim(Alice_traj, Alice_sim, model_of_supp_actions_for_Alice, False)
+    prettyprint(default_supp_actions)
     print
     print "------Simulation 2------"
-    print "Simulate four interactions with work Bob, whose task trajectories vary slightly (varied trajectory hardcoded)"
+    print "Simulate (capped) four interactions with work Bob, whose task trajectories vary slightly (varied trajectory hardcoded)"
     Bob_traj = ['GP_BR', 'GP_BL', 'GP_top', 'A_back', 'GP_L2', 'GP_L3', 'GP_L1', 'GP_L4', 'GP_seat', 'A_seat']
     Bob_truth_labels_onMondays = [('dowel','top_bracket', 'screwdriver'), ('dowel', 'top_bracket'), ('long_dowel', 'back'), ('hold',),('dowel','front_bracket'), ('dowel','back_bracket'),('dowel', 'front_bracket'),('dowel','back_bracket'),('seat',),('hold',)]
     #same thing, but without holds
@@ -174,8 +177,9 @@ def main():
     Bob_sim_Mondays = dict(zip(Bob_traj,Bob_truth_labels_onMondays))
     Bob_sim_Tuesdays = dict(zip(Bob_traj,Bob_truth_labels_onTuesdays))
     # bob_runs = run_sim (Bob_traj, Bob_truth_labels_onMondays)
+    model_of_supp_actions_for_Bob = deepcopy(default_supp_actions)
     print "Run 1"
-    model_of_supp_actions_for_Bob, q, w = execute_part_three_sim(Bob_traj, Bob_sim_Mondays, default_supp_actions, True)
+    model_of_supp_actions_for_Bob, q, w = execute_part_three_sim(Bob_traj, Bob_sim_Mondays, model_of_supp_actions_for_Bob, True)
     print str(q) + " queries"
     print str(w) + " incorrect actions"
     print "Run 2"
@@ -206,16 +210,36 @@ def main():
     # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
     # model_of_supp_actions_for_gen = execute_part_three_sim(gen_traj, gen_sim_truth, model_of_supp_actions_for_gen, False)
     print
-    print "------Simulation 4------"
+    print "------Simulation 3------"
+    print "Showing convergence with both generated (but constant over all interactions) state seq and generated labels"
+
     print "Default model, for reference:"
     prettyprint(default_supp_actions)
     print "Calculating completed_runs before zero queries and zero incorrect_actions"
     for i in range(10):
         t = generate_rand_state_seq(myHTM)
+        l = dict(zip(t, generate_reasonable_train_labels(t)))
+        print "---------Worker: " + str(i)
+        if i == 9:
+            print "Worker 9 ground-truth, for reference:"
+            prettyprint(l)
         d = deepcopy(default_supp_actions)
-        runs = run_sim(t, dict(zip(t, generate_reasonable_train_labels(t))), d, False)
-        print "Worker: " + str(i) + "\t" + str(runs) + " runs before success"
-
+        # prettyprint(d)
+        runs = run_sim(t, l, d, False)
+        print  str(runs) + " runs before success"
+    # t0 = generate_rand_state_seq(myHTM)
+    # l0 = dict(zip(t0, generate_reasonable_train_labels(t0)))
+    # d0 = deepcopy(default_supp_actions)
+    print
+    
+    # prettyprint(d0)
+    # runs= run_sim(t0, l0, d0, False)
+    # print "Worker: " + str(10) + "\t" + str(runs) + " runs before success"
+    # print
+    # print "Last worker's ground truth labels, for reference:"
+    # prettyprint(l0)
+    # print "Last worker's dict for supportive actions, after aggregating 'votes' towards their ground-truth labels"
+    # prettyprint(m0)
 
     # generate_reasonable_train_labels(generate_rand_state_seq(myHTM))
 
