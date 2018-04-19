@@ -14,6 +14,7 @@ def chair_task_features():
 	return ['seat_taken', '1dowel_taken', '2dowel_taken', '3dowel_taken', '4dowel_taken', 'screwdriver_taken', 'back_taken', '1frontb_taken', '2frontb_taken', '1backb_taken', '2backb_taken', '1topb_taken', '2topb_taken']
 
 def generate_reasonable_features():
+	pass
 	
 
 def generate_reasonable_train_labels(traj):

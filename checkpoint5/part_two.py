@@ -12,7 +12,7 @@ def example_sup_actions():
 
 """
 Heuristics used to generate labels:
-1. Always give the screwdriver first (what I remember made most sense for folks during Corina's user tests)
+1. Always give the screwdriver first (what I remember made most sense for folks during Corina's user tests) - change
 2. Humans want (bracket, dowel) for each of the four legs because according to the HTM GP_seat comes afterwards 
 (eliminates the possibility of wanting (seat and all four brackets for GP_seat and only dowels for each GP_L#)) 
 3. introduced: you want them in the order bracket, dowel or dowel, brack for all for legs. I think given the above contraints this makes sense for a real worker.

@@ -51,7 +51,7 @@ def execute_part_two_sim(myHTM, f):
     possible_ai = list(powerset(A)) #list of lists
 
 
-    init_labels = []
+    # init_labels = []
     # for i in range(NUMBER_INIT_USERS_PART_TWO):
     #   #list of tasksteps
     #   traj = 
