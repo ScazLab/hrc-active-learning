@@ -1,19 +1,18 @@
 import rospy
-# from human_robot_collaboration.controller import BaseController
+from human_robot_collaboration.controller import BaseController
 # from hrc_active_learning.chair_assembly_task import *
 # from hrc_active_learning.user_pref import *
-import hrc_active_learning
+from hrc_active_learning.src import *
 
-"""
-Simulation for Initial Training Period
-output: default_supp_actions dict, of form {(timestep, (?-tuple of feats)): Counter {(?-tuple of supportive actions): vote count, 
-                                                                                    (?-tuple of different supportive acts): vote count, ...} ,
-                                            ... }
-"""
-NUM_INIT_TRAINERS = 3
+
+# Simulation for Initial Training Period
+# output: default_supp_actions dict, of form {(timestep, (?-tuple of feats)): Counter {(?-tuple of supportive actions): vote count,
+                                                                                    # (?-tuple of different supportive acts): vote count, ...} ,
+                                            # ... }
+
 def default_supp_actions(myHTM):
     default_supp_actions = defaultdict(Counter)
-    for trainer in range(NUM_INIT_TRAINERS):
+    for trainer in range(3):
         t = generate_rand_state_seq(myHTM)
         trainer_pref = generate_user(t)
         for timestep, (feats, supp_acts) in enumerate(trainer_pref):
@@ -68,11 +67,11 @@ class UserPrefDemoController(BaseController):
             if should query given state_of_the_world, query
             else do action
             wait for feedback
-            if negative 
+            if negative
                 incorrect_action_query()
             else
                 update state_of_the_world
-            
+
             '''
 
 def main():
