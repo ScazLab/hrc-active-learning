@@ -56,12 +56,28 @@ class UserPrefDemoController(BaseController):
             timer_path='timer.json',
             **kwargs)
 
+
+
     def _run(self):
+        proactive_queries = 0
+        incorrect_action_queries = 0
+        state_of_the_world = ()
+        # pass
         while not is_shutdown():
-            pass
+            '''
+            if should query given state_of_the_world, query
+            else do action
+            wait for feedback
+            if negative 
+                incorrect_action_query()
+            else
+                update state_of_the_world
+            
+            '''
 
 def main():
     def_model = default_supp_actions(chair_task_HTM())
+    prettyprint(def_model)
 
     # controller = UserPrefDemoController()
     # controller.time_step = 0
