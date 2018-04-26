@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>hrc-active-learning</name>
+  <name>hrc_active_learning</name>
   <version>0.0.0</version>
   <description>The hrc_active_learning package was developed as part of a 2018 CS490 Senior Project, a simple demo of user preference modeling.</description>
 

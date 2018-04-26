@@ -6,7 +6,6 @@ from part_two import *
 from collections import defaultdict
 from collections import Counter
 from copy import deepcopy
-# import pprint
 
 
 """
@@ -52,10 +51,6 @@ Incorrect Action =
 """
 
 def part_three(new_user_groundtruth, old_supp_acts_model, verbose=True):
-    # print 'part three'
-    # print new_user_groundtruth
-    # print uncertainty_score(old_supp_acts_model)
-    # prettyprint(uncertainty_score(old_supp_acts_model))
     tasksteps_to_query = uncertainty_score(old_supp_acts_model)
     new_supp_acts_model = old_supp_acts_model
     total_queries = 0
@@ -88,12 +83,9 @@ def part_three(new_user_groundtruth, old_supp_acts_model, verbose=True):
     return new_supp_acts_model, total_queries, incorrect_actions
 
 
-
 def run_sim(new_user_groundtruth, def_supp_acts_model, verbose = True):
     supp_acts_model_to_update = deepcopy(def_supp_acts_model)
-    # print new_user_groundtruth
     new_user_groundtruth = {(timestep, feats) : supp_acts for timestep, (feats, supp_acts) in enumerate(new_user_groundtruth)}
-    # print new_user_groundtruth
     completed_runs = 0
     print "Run " +  str(completed_runs + 1)
     supp_acts_model_to_update, total_queries, incorrect_actions = part_three(new_user_groundtruth, supp_acts_model_to_update, verbose)
@@ -107,16 +99,22 @@ def run_sim(new_user_groundtruth, def_supp_acts_model, verbose = True):
 
 def main():
     myHTM = chair_task_HTM()
+
+
     print "---Possible features:---"
     print chair_task_features()
+
+
     print "=== PART ONE ==="
+
     print "Demonstration of how user ground truth labels to feature vectors are generated:"
     t, sample_user_pref = part_one(myHTM)
     print "Sequence of task states, for reference:" + str(t)
-    # prettyprint(sample_user_pref)
     prettyprint(sample_user_pref)
+
     
     print "=== PART TWO ==="
+
     print "Result of training iterations"
     default_supp_actions = part_two(myHTM)
     prettyprint(default_supp_actions, labels = ['Features of env', 'Supportive actions to deliver'])
@@ -125,6 +123,7 @@ def main():
 
 
     print "=== PART THREE ==="
+
     print "------Simulation 1------"
     u0_traj, u0_pref = part_one(myHTM)
     print "User 1's task trajectory, for reference:"
@@ -132,9 +131,7 @@ def main():
     print "User 1's preferences, for reference:"
     prettyprint(u0_pref,labels = ['Features of env', 'Supportive actions to deliver'] )
     runs = run_sim(u0_pref, default_supp_actions, verbose=True)
-
     print str(runs) + " runs before success"
-    # part_three(d)
 
     print "------Simulation 2------"
     for i in range(10):
