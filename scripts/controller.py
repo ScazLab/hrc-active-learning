@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 
+# import os
+# import argparse
+# import sys
 import rospy
+
+from rospy import init_node, is_shutdown
 from human_robot_collaboration.controller import BaseController
 # from hrc_active_learning.chair_assembly_task import *
 import hrc_active_learning.model_framework as framework
@@ -20,15 +25,14 @@ class UserPrefDemoController(BaseController):
     # HOLD_TOP = 'hold_top' #hold
     # HOLD = 'hold_leg'
 
-    def __init__(self):
-        super(SuppBhvsHMMController, self).__init__(
+    def __init__(self, **kwargs):
+        super(UserPrefDemoController, self).__init__(
             left=True,
             right=True,
             speech=False,
             listen=True,
             recovery=True,
-            timer_path='timer.json',
-            **kwargs)
+            timer_path='timer.json', **kwargs)
         self.object_info = {
             "seat":                [(BaseController.LEFT, 198)],
             "back":                [(BaseController.LEFT, 201)],
@@ -40,18 +44,18 @@ class UserPrefDemoController(BaseController):
             "screwdriver":         [(BaseController.RIGHT, 20)]
         }
 
-    def do_supp_action(spec, index=0):
+    def do_supp_action(self, spec, index=0):
         if spec == 'dowel':
             if index > 5:
                 print "Error: the index for the next object to bring is too high"
                 return -1
-            side, obj_num = self.OBJECT_INFO[spec][index]
+            side, obj_num = self.object_info[spec][index]
             r = self._action(side, ('get_pass', [obj_num]), {'wait': True})
         else:
             r = self._action(BaseController.RIGHT, ('hold_top', []), {'wait': True})
         return r
 
-    def state_of_the_world(current=(), successful_action=None): #change
+    def state_of_the_world(self, current=(), successful_action=None): #change
         new = list(current)
         for action in successful_actions:
             if action == 'dowel':
@@ -67,11 +71,11 @@ class UserPrefDemoController(BaseController):
         query_dict = framework.uncertainty_score(curr_model)
 
         sim_user_truth = framework.default_supp_actions(num_users=1)
-        
+
         prettyprint(curr_model)
         print
         prettyprint(query_dict)
-        print 
+        print
         prettyprint(sim_user_truth)
 
         proactive_queries = 0
@@ -80,33 +84,34 @@ class UserPrefDemoController(BaseController):
         timestep = 0
         state_of_the_world = ()
         supp_acts = ()
-        
+
         while not is_shutdown():
-            try:
-                #Possible Pro-active Query
-                if query_dict[(timestep, state_of_the_world)]:
-                    print "Robot: What can I do to help?"
-                    print "<< (Sim user) : " + str(sim_user_truth[(timestep, state_of_the_world)])
-                    curr_model[(timestep, state_of_the_world)][sim_user_truth[(timestep, state_of_the_world)]] += 1
-                    proactive_queries += 1
-                    feedback = do_supp_action(sim_user_truth[timestep, state_of_the_world])
-                    last_actions_performed = sim_user_truth[timestep, state_of_the_world]
-                #Pro-active Action
-                else:
-                    print "Pro-actively doing supportive action: " + str(curr_model[(timestep, state_of_the_world)].most_common(1)[0][0])
-                    feedback = do_supp_action(curr_model[(timestep, state_of_the_world)].most_common(1)[0][0])
-                    last_actions_performed = curr_model[(timestep, state_of_the_world)].most_common(1)[0][0]
+            self.do_supp_action('hold')
+            # try:
+            #     #Possible Pro-active Query
+            #     if query_dict[(timestep, state_of_the_world)]:
+            #         print "Robot: What can I do to help?"
+            #         print "<< (Sim user) : " + str(sim_user_truth[(timestep, state_of_the_world)])
+            #         curr_model[(timestep, state_of_the_world)][sim_user_truth[(timestep, state_of_the_world)]] += 1
+            #         proactive_queries += 1
+            #         feedback = self.do_supp_action(sim_user_truth[timestep, state_of_the_world])
+            #         last_actions_performed = sim_user_truth[timestep, state_of_the_world]
+            #     #Pro-active Action
+            #     else:
+            #         print "Pro-actively doing supportive action: " + str(curr_model[(timestep, state_of_the_world)].most_common(1)[0][0])
+            #         feedback = self.do_supp_action(curr_model[(timestep, state_of_the_world)].most_common(1)[0][0])
+            #         last_actions_performed = curr_model[(timestep, state_of_the_world)].most_common(1)[0][0]
 
-            except KeyError:
-                #When never seen this state in training, always query the user
-                print "Robot:What can I do to help?"
-                print "<< (Sim user) : " + str(sim_user_truth[(timestep, state_of_the_world)])
-                curr_model[(timestep, state_of_the_world)][sim_user_truth[(timestep, state_of_the_world)]] += 1
-                proactive_queries += 1
+            # except KeyError:
+            #     #When never seen this state in training, always query the user
+            #     print "Robot:What can I do to help?"
+            #     print "<< (Sim user) : " + str(sim_user_truth[(timestep, state_of_the_world)])
+            #     curr_model[(timestep, state_of_the_world)][sim_user_truth[(timestep, state_of_the_world)]] += 1
+            #     proactive_queries += 1
 
-            if feedback.success:
-                state_of_the_world = state_of_the_world(state_of_the_world, last_actions_performed)
-                
+            # if feedback.success:
+            #     state_of_the_world = self.state_of_the_world(state_of_the_world, last_actions_performed)
+            rospy.signal_shutdown("End of task.")
 
 
             '''
@@ -128,7 +133,7 @@ class UserPrefDemoController(BaseController):
                     supp_acts = supp_acts[:act_count] #keep whatever worked
                     supp_acts += user responses[act_count:] #add from this point on
                     incorrect acts ++
-                
+
 
             wait for feedback
             if negative
@@ -139,7 +144,7 @@ class UserPrefDemoController(BaseController):
             '''
 
 def main():
-    
+
 
     controller = UserPrefDemoController()
     controller.time_step = 0
