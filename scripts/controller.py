@@ -76,6 +76,7 @@ class UserPrefDemoController(BaseController):
         return tuple(new)
 
     def _run(self):
+        print "Sairam"
         curr_model = framework.default_supp_actions(num_users=3)
         query_dict = framework.uncertainty_score(curr_model)
 
