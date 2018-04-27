@@ -87,9 +87,9 @@ def chair_task_sim_user_labels(traj):
 
 	return zip(feature_seq, labels)
 
-def default_supp_actions():
+def default_supp_actions(num_users):
     default_supp_actions = defaultdict(Counter)
-    for trainer in range(3):
+    for trainer in range(num_users):
         t = chair_task_rand_state_seq()
         trainer_pref = chair_task_sim_user_labels(t)
         for timestep, (feats, supp_acts) in enumerate(trainer_pref):
