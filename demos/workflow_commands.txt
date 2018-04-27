@@ -1,0 +1,15 @@
+Terminal 1
+catkin build hrc-active-learning if changed src files (not needed if just changed controller)
+cd ~/ros_devel_ws && ./baxter.sh
+untuck
+roslaunch hrc-active-learning hrc-active-learning.launch
+open html page and make sure connection is present - will say in this terminal as
+   [INFO][/rosbridge_websocket::open]: Client connected.  1 clients total.
+
+Open Terminal 2
+cd ~/ros_devel_ws && ./baxter.sh
+rosrun hrc-active-learning controller.py
+tuck
+
+close Terminal 1
+close Terminal 2

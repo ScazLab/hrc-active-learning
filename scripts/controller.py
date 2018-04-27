@@ -17,6 +17,7 @@ from hrc_active_learning.utils import *
 #- __init__ rather than _run?
 #- improve readability
 #- array O(1) for state_of_the_world check/update rather than list lookup, note has to be hashable type
+#- change 'face' display
 
 class UserPrefDemoController(BaseController):
     # BRING = 'get_pass' #suction
@@ -57,13 +58,21 @@ class UserPrefDemoController(BaseController):
 
     def state_of_the_world(self, current=(), successful_action=None): #change
         new = list(current)
-        for action in successful_actions:
-            if action == 'dowel':
-                for feat in current:
-                    if feat[:5] == 'dowel':
-                        new += ['dowel_' + str(feat[6] + 1) + 'taken']
-            elif action == 'hold':
-                new += ['hold_taken']
+        if successful_action == 'dowel':
+            dowels_seen = False
+            for feat in current:
+                if feat[:5] == 'dowel':
+                    new += ['dowel_' + str(feat[6] + 1) + 'taken']
+                    dowels_seen = True
+            if not dowels_seen:
+                new += ['dowel_1taken']
+        elif successful_action == 'hold':
+            new += ['hold_taken']
+            print new
+        elif successful_action == None:
+            pass
+        else:
+            new += ['hold_taken']
         return tuple(new)
 
     def _run(self):
@@ -82,35 +91,53 @@ class UserPrefDemoController(BaseController):
         incorrect_action_queries = 0
 
         timestep = 0
-        state_of_the_world = ()
+        state_of_the_world = self.state_of_the_world()
+        print state_of_the_world
         supp_acts = ()
 
         while not is_shutdown():
-            self.do_supp_action('hold')
-            # try:
-            #     #Possible Pro-active Query
-            #     if query_dict[(timestep, state_of_the_world)]:
-            #         print "Robot: What can I do to help?"
-            #         print "<< (Sim user) : " + str(sim_user_truth[(timestep, state_of_the_world)])
-            #         curr_model[(timestep, state_of_the_world)][sim_user_truth[(timestep, state_of_the_world)]] += 1
-            #         proactive_queries += 1
-            #         feedback = self.do_supp_action(sim_user_truth[timestep, state_of_the_world])
-            #         last_actions_performed = sim_user_truth[timestep, state_of_the_world]
-            #     #Pro-active Action
-            #     else:
-            #         print "Pro-actively doing supportive action: " + str(curr_model[(timestep, state_of_the_world)].most_common(1)[0][0])
-            #         feedback = self.do_supp_action(curr_model[(timestep, state_of_the_world)].most_common(1)[0][0])
-            #         last_actions_performed = curr_model[(timestep, state_of_the_world)].most_common(1)[0][0]
+            # print str(state_of_the_world)
+            # self.do_supp_action('hold')
+            # state_of_the_world = self.state_of_the_world(state_of_the_world, 'hold')
+            # print str(state_of_the_world)
+            try:
+                #Possible Pro-active Query
+                if query_dict[(timestep, state_of_the_world)]:
+                    print "Robot: What can I do to help?"
+                    print "<< (Sim user) : " + str(sim_user_truth[(timestep, state_of_the_world)].most_common(1)[0][0])
+                    curr_model[(timestep, state_of_the_world)][sim_user_truth[(timestep, state_of_the_world)].most_common(1)[0][0]] += 1
+                    proactive_queries += 1
+                    supp_acts = sim_user_truth[timestep, state_of_the_world].most_common(1)[0][0]
+                    # feedback = self.do_supp_action(sim_user_truth[timestep, state_of_the_world])
+                    # last_actions_performed = sim_user_truth[timestep, state_of_the_world]
+                #Pro-active Action
+                else:
+                    print "Pro-actively doing supportive action: " + str(curr_model[(timestep, state_of_the_world)].most_common(1)[0][0])
+                    supp_acts = curr_model[(timestep, state_of_the_world)].most_common(1)[0][0]
+                    # feedback = self.do_supp_action(curr_model[(timestep, state_of_the_world)].most_common(1)[0][0])
+                    # last_actions_performed = curr_model[(timestep, state_of_the_world)].most_common(1)[0][0]
 
-            # except KeyError:
-            #     #When never seen this state in training, always query the user
-            #     print "Robot:What can I do to help?"
-            #     print "<< (Sim user) : " + str(sim_user_truth[(timestep, state_of_the_world)])
-            #     curr_model[(timestep, state_of_the_world)][sim_user_truth[(timestep, state_of_the_world)]] += 1
-            #     proactive_queries += 1
+            except KeyError:
+                #When never seen this state in training, always query the user
+                print "Robot:What can I do to help?"
+                print "<< (Sim user) : " + str(sim_user_truth[(timestep, state_of_the_world)])
+                curr_model[(timestep, state_of_the_world)][sim_user_truth[(timestep, state_of_the_world)].most_common(1)[0][0]] += 1
+                proactive_queries += 1
+                supp_acts = sim_user_truth[timestep, state_of_the_world].most_common(1)[0][0]
 
-            # if feedback.success:
-            #     state_of_the_world = self.state_of_the_world(state_of_the_world, last_actions_performed)
+            #doing just first of the supp_acts planned
+            feedback = self.do_supp_action(supp_acts[0])
+            if feedback.success:
+                print state_of_the_world
+                state_of_the_world = self.state_of_the_world(state_of_the_world, supp_acts[0])
+                print state_of_the_world
+            elif feedback.response == feedback.ACT_KILLED:
+                print "Would have to do an incorrect_action_query"
+            elif feedback.response in (feedback.NO_IR_SENSOR, feedback.ACT_NOT_IMPL):
+                self._stop()
+            else:
+                print "Would need to retry"
+            print state_of_the_world
             rospy.signal_shutdown("End of task.")
 
 
