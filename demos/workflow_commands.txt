@@ -11,5 +11,7 @@ cd ~/ros_devel_ws && ./baxter.sh
 rosrun hrc-active-learning controller.py
 tuck
 
-close Terminal 1
 close Terminal 2
+close Terminal 1
+
+shutdown baxter
