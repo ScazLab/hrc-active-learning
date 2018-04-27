@@ -1,3 +1,4 @@
+import random
 ARROW = "->"
 PARALLEL = "||"
 
@@ -31,10 +32,10 @@ class HTM(object):
         traj = []
         if self.data == ARROW:
             for child in self.children:
-                traj.extend(gen_task_seq(child))
+                traj.extend(child.gen_task_seq())
         elif self.data == PARALLEL:
             for child in random.sample(self.children, len(self.children)):
-                traj.extend(gen_task_seq(child))
+                traj.extend(child.gen_task_seq())
         else:
             traj += [self.data]
         return traj

@@ -11,7 +11,7 @@ def chair_task_HTM():
 
 def chair_task_rand_state_seq():
     htm = chair_task_HTM()
-    traj = gen_task_seq(htm)
+    traj = htm.gen_task_seq()
     return traj
     
 

@@ -1,6 +1,7 @@
 from htm import *
+from chair_assembly_task import *
 
-from collections import Counter
+from collections import defaultdict, Counter
 import random
 
 """
@@ -85,6 +86,15 @@ def chair_task_sim_user_labels(traj):
 		feature_seq += [tuple(sorted(feats))]
 
 	return zip(feature_seq, labels)
+
+def default_supp_actions():
+    default_supp_actions = defaultdict(Counter)
+    for trainer in range(3):
+        t = chair_task_rand_state_seq()
+        trainer_pref = chair_task_sim_user_labels(t)
+        for timestep, (feats, supp_acts) in enumerate(trainer_pref):
+            default_supp_actions[(timestep,feats)][supp_acts] += 1
+    return default_supp_actions
 
 def uncertainty_score(user_pref_dict):
 	uncertainty_dict = {}
