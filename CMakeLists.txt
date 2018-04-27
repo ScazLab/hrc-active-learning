@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
              rospy
              std_msgs
              message_generation)
-#BHAVANI: ABOVE WAS COPIED FROM CORINA'S (hrc_pred_supp_bhvs) CMAKELISTS                  -- verify
+#CHECK
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -22,7 +22,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
 catkin_python_setup()
-#BHAVANI: SECOND CHANGE MADE
+#CHECK
 
 ################################################
 ## Declare ROS messages, services and actions ##
