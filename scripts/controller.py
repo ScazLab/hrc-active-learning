@@ -6,6 +6,7 @@
 import rospy
 
 from rospy import init_node, is_shutdown
+from std_msgs.msg import String
 from human_robot_collaboration.controller import BaseController
 # from hrc_active_learning.chair_assembly_task import *
 import hrc_active_learning.model_framework as framework
@@ -44,6 +45,7 @@ class UserPrefDemoController(BaseController):
             "top_bracket":         [(BaseController.RIGHT, 16), (BaseController.RIGHT, 17)],
             "screwdriver":         [(BaseController.RIGHT, 20)]
         }
+        self.human_input = None
 
     def do_supp_action(self, spec, index=0):
         if spec == 'dowel':
@@ -74,6 +76,9 @@ class UserPrefDemoController(BaseController):
         else:
             new += ['hold_taken']
         return tuple(new)
+
+    def web_interface_callback(self, data):
+        self.human_input = data.data
 
     def _run(self):
         print "Sairam"
@@ -139,6 +144,13 @@ class UserPrefDemoController(BaseController):
             else:
                 print "Would need to retry"
             print state_of_the_world
+
+
+
+            while self.human_input != 'next':
+                rospy.Subscriber('/hrc_active_learning/web_interface/pressed', String, self.web_interface_callback)
+                rospy.rostime.wallsleep(0.5)
+            print self.human_input
             rospy.signal_shutdown("End of task.")
 
 
