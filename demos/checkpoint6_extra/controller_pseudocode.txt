@@ -1,29 +1,39 @@
 '''
-if should query given state_of_the_world:
-    query
-    supp_acts = user response
-    proactive queries ++
-else:
-    supp_acts = prediction
-
-while supp_acts is not empty:
-    feedback = do next act ()
-    if success:
-        update state of the world based on that one action
-            (sort before storing)
-        continue
+for timestep in range(len(task):
+    if should query given state_of_the_world:
+        user_resp = query()
+        supp_acts = user response
+        proactive queries ++
     else:
-        query
-        supp_acts = supp_acts[:act_count] #keep whatever worked
-        supp_acts += user responses[act_count:] #add from this point on
-        incorrect acts ++
+        supp_acts = prediction
+
+    fail_check = 0
+
+    while supp_acts is not empty: #tuple of acts
+        feedback = do action (next)
+        if success:
+            update state of the world based on that one action
+                //(sort before storing)
+            next = next()
+            continue
+        elif wrong
+            query
+            supp_acts = supp_acts[:act_count] #keep whatever worked
+            supp_acts += user responses[act_count:] #add from this point on
+            next = next()
+            incorrect acts ++
+        else (mech fail):
+            fail_check ++
+            if fail_check < 3
+                continue
+            else _stop(), raise Exception('Robot Failure')
 
 
-wait for feedback
-if negative
-    incorrect_action_query()
-else
-    update state_of_the_world
+    //wait for feedback
+    //if negative
+    //    incorrect_action_query()
+    //else
+     //   update state_of_the_world
 
 '''
 
@@ -33,3 +43,9 @@ else
 # HOLD_LEG = 'hold_leg' #higher 'hold'
 # HOLD_TOP = 'hold_top' #hold
 # HOLD = 'hold_leg'
+
+def query()
+    print what should i do
+    take in response in commandline
+    return user response
+

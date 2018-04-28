@@ -39,3 +39,7 @@ class HTM(object):
         else:
             traj += [self.data]
         return traj
+
+    def get_len(self):
+        leaves = self.get_leaves()
+        return len(leaves)
