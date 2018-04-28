@@ -20,7 +20,7 @@ from hrc_active_learning.utils import *
 
 
 class UserPrefDemoController(BaseController):
-    
+
     def __init__(self, **kwargs):
         super(UserPrefDemoController, self).__init__(
             left=True,
@@ -42,12 +42,12 @@ class UserPrefDemoController(BaseController):
         self.current_model = framework.default_supp_actions(num_users=3)
 
     def _run(self):
-        prettyprint(current_model)
+        prettyprint(self.current_model)
         while not is_shutdown():
             rospy.signal_shutdown("End of task.")
 
 
-        
+
 def main():
     controller = UserPrefDemoController()
     controller.time_step = 0

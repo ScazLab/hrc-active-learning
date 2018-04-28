@@ -1,7 +1,7 @@
 Terminal 1
 catkin build hrc-active-learning if changed src files (not needed if just changed controller) (tab complete doesn't work for some reason, but builds)
 cd ~/ros_devel_ws && ./baxter.sh
-untuck
+untuck #need for collision warnings to not be present during roslaunch even if not moving arms
 roslaunch hrc-active-learning hrc-active-learning.launch
 open or refresh html page and make sure connection is present - will say in this terminal as
    [INFO][/rosbridge_websocket::open]: Client connected.  1 clients total.
