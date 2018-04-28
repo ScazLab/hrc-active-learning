@@ -1,0 +1,35 @@
+'''
+if should query given state_of_the_world:
+    query
+    supp_acts = user response
+    proactive queries ++
+else:
+    supp_acts = prediction
+
+while supp_acts is not empty:
+    feedback = do next act ()
+    if success:
+        update state of the world based on that one action
+            (sort before storing)
+        continue
+    else:
+        query
+        supp_acts = supp_acts[:act_count] #keep whatever worked
+        supp_acts += user responses[act_count:] #add from this point on
+        incorrect acts ++
+
+
+wait for feedback
+if negative
+    incorrect_action_query()
+else
+    update state_of_the_world
+
+'''
+
+#REFERENCE
+# BRING = 'get_pass' #suction
+# CLEAR = 'cleanup'
+# HOLD_LEG = 'hold_leg' #higher 'hold'
+# HOLD_TOP = 'hold_top' #hold
+# HOLD = 'hold_leg'
