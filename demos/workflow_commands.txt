@@ -1,5 +1,9 @@
+Turn on robot
+
 Terminal 1
-catkin build hrc-active-learning if changed src files (not needed if just changed controller) (tab complete doesn't work for some reason, but builds)
+catkin build hrc-active-learning if changed src files (not needed if just changed controller)
+    (tab complete doesn't work for some reason, but builds)
+    don't have a slash after hrc-active-learning
 cd ~/ros_devel_ws && ./baxter.sh
 untuck #need for collision warnings to not be present during roslaunch even if not moving arms
 roslaunch hrc-active-learning hrc-active-learning.launch

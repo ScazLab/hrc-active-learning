@@ -7,12 +7,12 @@ from collections import defaultdict, Counter
 """
 Heuristics used to generate labels:
 1. Always give the screwdriver first (what I remember made most sense for folks during Corina's user tests) - change
-2. Humans want (bracket, dowel) for each of the four legs because according to the HTM GP_seat comes afterwards 
-(eliminates the possibility of wanting (seat and all four brackets for GP_seat and only dowels for each GP_L#)) 
+2. Humans want (bracket, dowel) for each of the four legs because according to the HTM GP_seat comes afterwards
+(eliminates the possibility of wanting (seat and all four brackets for GP_seat and only dowels for each GP_L#))
 3. introduced: you want them in the order bracket, dowel or dowel, brack for all for legs. I think given the above contraints this makes sense for a real worker.
-4. GP_BR, GP_BL, GP_top: appropriate dowels for each, flip a coin to give the bracket along with it, and just make sure that all brackets are given by the end. 
+4. GP_BR, GP_BL, GP_top: appropriate dowels for each, flip a coin to give the bracket along with it, and just make sure that all brackets are given by the end.
 Randomize the ordering of these being delivered.
-5. A_seat, A_top: decide between hold or () 
+5. A_seat, A_top: decide between hold or ()
 6. No other options for () as a label (gathering parts is assumed to be out of scope of the human's tasks)
 """
 
@@ -20,15 +20,15 @@ Randomize the ordering of these being delivered.
 # def chair_task_sim_user_labels(traj): #change to return in form (timestep_feats_tuple, supp_acts_tuple)
 # 	labels = []
 # 	feature_seq = [()]
-	
-# 	brackets_first = random.random() > .6 
+
+# 	brackets_first = random.random() > .6
 # 	dowels = 0
 # 	front_brackets =0
 # 	back_brackets = 0
 # 	top_brackets = 0
 
 # 	for timestep, taskstep in enumerate(traj):
-		
+
 # 		supp_acts = []
 # 		feats = []
 
@@ -40,7 +40,7 @@ Randomize the ordering of these being delivered.
 # 			front_brackets +=1
 # 			dowels +=1
 # 			feats += ['dowel_{}taken'.format(dowels),'frontb_{}taken'.format(front_brackets)]
-		
+
 		# elif taskstep == 'GP_L3' or taskstep == 'GP_L4':
 		# 	if brackets_first:
 		# 		supp_acts += ['back_bracket', 'dowel']
@@ -49,15 +49,15 @@ Randomize the ordering of these being delivered.
 		# 	back_brackets += 1
 		# 	dowels += 1
 		# 	feats += ['dowel_{}taken'.format(dowels), 'backb_{}taken'.format(back_brackets)]
-		
+
 		# elif taskstep == 'GP_seat':
 		# 	supp_acts += ['seat']
 		# 	feats += ['seat_taken']
-		
+
 		# elif taskstep == 'A_seat' or taskstep == 'A_back':
 		# 	supp_acts += random.choice([['hold'],[]]) #might want to skew this in favor of empty
 		# 	if supp_acts == ['hold']: feats += ['hold_taken']
-		
+
 		# elif taskstep == 'GP_BL' or taskstep == 'GP_BR':
 		# 	supp_acts += ['dowel']
 		# 	if random.random() > .5 or top_brackets > 0 or timestep == 0:
@@ -66,7 +66,7 @@ Randomize the ordering of these being delivered.
 		# 	random.shuffle(supp_acts)
 		# 	dowels += 1
 		# 	feats += ['dowel_{}taken'.format(dowels), 'topb_{}taken'.format(top_brackets)]
-		
+
 		# elif taskstep == 'GP_top':
 		# 	while top_brackets < 2 :
 		# 		supp_acts += ['top_bracket']
@@ -75,7 +75,7 @@ Randomize the ordering of these being delivered.
 		# 	supp_acts += ['long_dowel']
 		# 	feats += ['longdowel_taken']
 		# 	random.shuffle(supp_acts)
-		
+
 
 		# if timestep == 0:
 		# 	supp_acts += ['screwdriver']
@@ -114,15 +114,21 @@ class UserPrefModel(object):
 		self.model[timestep_state_tup][supp_acts_tup] += 1
 
 	def predict(self, timestep, state):
-		return self.model[(timestep, state)].most_common(1)[0][0]
+		try:
+			return self.model[(timestep, state)].most_common(1)[0][0]
+		except IndexError: #ONLY FOR DEBUGGING
+			print('timestep', timestep, 'state', state)
+			raw_input('Proceed (UserPrefModel.predict())')
 
 	def should_query(self, timestep, state):
 		check = None
 		try:
 			check = self.model[(timestep, state)].most_common(1)[0][1] <= float( sum(self.model[(timestep, state)].values()) ) / 2.0 #no majority vote
 			# print('checking about query', check)
-		except KeyError:
+		except IndexError:
 			check = True
+		# except IndexError:
+		# 	prettyprint(self.model)
 		return check
 
 	def prettyprint(self):
