@@ -1,4 +1,7 @@
 Turn on robot
+Terminal 0
+cd ~/ros_devel_ws && ./baxter.sh
+untuck
 
 Terminal 1
 catkin build hrc-active-learning if changed src files (not needed if just changed controller)
@@ -17,10 +20,9 @@ rosrun hrc-active-learning controller.py
 close Terminal 2
 close Terminal 1
 
-Open Terminal 3
-cd ~/ros_devel_ws && ./baxter.sh
+Terminal 0
 tuck
 
-close Terminal 3
+close Terminal 0
 
 shutdown baxter

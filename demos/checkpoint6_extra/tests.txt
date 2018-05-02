@@ -1,0 +1,51 @@
+(0, ())                                                                                                                                   Counter({('top_bracket', 'dowel', 'screwdriver'): 2, ('dowel', 'top_bracket', 'screwdriver'): 1})
+(1, ('dowel_1taken', 'screwdriver_taken', 'topb_1taken'))                                                                                 Counter({('top_bracket', 'dowel'): 2, ('dowel', 'top_bracket'): 1})
+(2, ('dowel_2taken', 'screwdriver_taken', 'topb_2taken'))                                                                                 Counter({('back', 'long_dowel'): 2, ('long_dowel', 'back'): 1})
+(3, ('back_taken', 'dowel_2taken', 'longdowel_taken', 'screwdriver_taken', 'topb_2taken'))                                                Counter({(): 3})
+(4, ('back_taken', 'dowel_2taken', 'longdowel_taken', 'screwdriver_taken', 'topb_2taken'))                                                Counter({('front_bracket', 'dowel'): 2, ('back_bracket', 'dowel'): 1})
+(5, ('back_taken', 'backb_1taken', 'dowel_3taken', 'longdowel_taken', 'screwdriver_taken', 'topb_2taken'))                                Counter({('front_bracket', 'dowel'): 1})
+(5, ('back_taken', 'dowel_3taken', 'frontb_1taken', 'longdowel_taken', 'screwdriver_taken', 'topb_2taken'))                               Counter({('back_bracket', 'dowel'): 1, ('front_bracket', 'dowel'): 1})
+(6, ('back_taken', 'backb_1taken', 'dowel_4taken', 'frontb_1taken', 'longdowel_taken', 'screwdriver_taken', 'topb_2taken'))               Counter({('back_bracket', 'dowel'): 2})
+(6, ('back_taken', 'dowel_4taken', 'frontb_2taken', 'longdowel_taken', 'screwdriver_taken', 'topb_2taken'))                               Counter({('back_bracket', 'dowel'): 1})
+(7, ('back_taken', 'backb_1taken', 'dowel_5taken', 'frontb_2taken', 'longdowel_taken', 'screwdriver_taken', 'topb_2taken'))               Counter({('back_bracket', 'dowel'): 1})
+(7, ('back_taken', 'backb_2taken', 'dowel_5taken', 'frontb_1taken', 'longdowel_taken', 'screwdriver_taken', 'topb_2taken'))               Counter({('front_bracket', 'dowel'): 2})
+(8, ('back_taken', 'backb_2taken', 'dowel_6taken', 'frontb_2taken', 'longdowel_taken', 'screwdriver_taken', 'topb_2taken'))               Counter({('seat',): 3})
+(9, ('back_taken', 'backb_2taken', 'dowel_6taken', 'frontb_2taken', 'longdowel_taken', 'screwdriver_taken', 'seat_taken', 'topb_2taken')) Counter({(): 2, ('hold',): 1})
+
+topb dowel screwdriver
+topb dowel
+//back long
+ask for long,back
+
+
+(0, ())                                                                                                                                                 Counter({('top_bracket', 'dowel', 'screwdriver'): 2, ('back_bracket', 'dowel', 'screwdriver'): 1})
+(1, ('backb_1taken', 'dowel_1taken', 'screwdriver_taken'))                                                                                              Counter({('back_bracket', 'dowel'): 1})
+(1, ('dowel_1taken', 'screwdriver_taken', 'topb_1taken'))                                                                                               Counter({('top_bracket', 'dowel'): 1, ('dowel', 'top_bracket'): 1})
+(2, ('backb_2taken', 'dowel_2taken', 'screwdriver_taken'))                                                                                              Counter({('front_bracket', 'dowel'): 1})
+(2, ('dowel_2taken', 'screwdriver_taken', 'topb_2taken'))                                                                                               Counter({('long_dowel', 'back'): 2}) //add back:1
+(3, ('back_taken', 'dowel_2taken', 'longdowel_taken', 'screwdriver_taken', 'topb_2taken'))                                                              Counter({(): 2})
+(3, ('backb_2taken', 'dowel_3taken', 'frontb_1taken', 'screwdriver_taken'))                                                                             Counter({('front_bracket', 'dowel'): 1})
+(4, ('back_taken', 'dowel_2taken', 'longdowel_taken', 'screwdriver_taken', 'topb_2taken'))                                                              Counter({('front_bracket', 'dowel'): 2})
+(4, ('backb_2taken', 'dowel_4taken', 'frontb_2taken', 'screwdriver_taken'))                                                                             Counter({('seat',): 1})
+(5, ('back_taken', 'dowel_3taken', 'frontb_1taken', 'longdowel_taken', 'screwdriver_taken', 'topb_2taken'))                                             Counter({('back_bracket', 'dowel'): 2})
+(5, ('backb_2taken', 'dowel_4taken', 'frontb_2taken', 'screwdriver_taken', 'seat_taken'))                                                               Counter({('hold',): 1})
+(6, ('back_taken', 'backb_1taken', 'dowel_4taken', 'frontb_1taken', 'longdowel_taken', 'screwdriver_taken', 'topb_2taken'))                             Counter({('back_bracket', 'dowel'): 1, ('front_bracket', 'dowel'): 1})
+(6, ('backb_2taken', 'dowel_4taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken'))                                                 Counter({('dowel', 'top_bracket'): 1})
+(7, ('back_taken', 'backb_1taken', 'dowel_5taken', 'frontb_2taken', 'longdowel_taken', 'screwdriver_taken', 'topb_2taken'))                             Counter({('back_bracket', 'dowel'): 1})
+(7, ('back_taken', 'backb_2taken', 'dowel_5taken', 'frontb_1taken', 'longdowel_taken', 'screwdriver_taken', 'topb_2taken'))                             Counter({('front_bracket', 'dowel'): 1})
+(7, ('backb_2taken', 'dowel_5taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_1taken'))                                  Counter({('top_bracket', 'dowel'): 1})
+(8, ('back_taken', 'backb_2taken', 'dowel_6taken', 'frontb_2taken', 'longdowel_taken', 'screwdriver_taken', 'topb_2taken'))                             Counter({('seat',): 2})
+(8, ('backb_2taken', 'dowel_6taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_2taken'))                                  Counter({('long_dowel', 'back'): 1})
+(9, ('back_taken', 'backb_2taken', 'dowel_6taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'seat_taken', 'topb_2taken')) Counter({('hold',): 1})
+(9, ('back_taken', 'backb_2taken', 'dowel_6taken', 'frontb_2taken', 'longdowel_taken', 'screwdriver_taken', 'seat_taken', 'topb_2taken'))               Counter({(): 1, ('hold',): 1})
+
+topb dowel screwdriver
+query << topb dowel
+// long back
+ask for back long
+
+thought experiment
+topb dowel screwdriver
+query << topb dowel
+// long back
+ask for back
