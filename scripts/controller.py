@@ -96,7 +96,7 @@ class UserPrefDemoController(BaseController):
 
         while not is_shutdown():
             # try:
-                while self.timestep < 2:#self.task_len:
+                while self.timestep < self.task_len:
 
                     if self.current_model.should_query(self.timestep, self.state_of_the_world):
                         self.current_action_plan = deque(self.query())
@@ -121,25 +121,32 @@ class UserPrefDemoController(BaseController):
                         self.debug()
                         continue
 
+                    starting_state = self.state_of_the_world
+                    actions_done = 0
                     # Go through action plan queue
                     while True:
                         if self.state_of_the_world.check_action(next_action):
                             feedback = self.robot_do(next_action)
+                            actions_done +=1
                         else:
                             raise Exception('Invalid action request')
                         if feedback.success == True:
                             self.state_of_the_world.update(next_action)
-                            self.debug()
+                            # self.debug()
                             try:
                                 next_action = self.current_action_plan.popleft()
-                                self.debug()
+                                # self.debug()
                             except IndexError:
                                 break
                         elif feedback.response == feedback.ACT_KILLED:
                             print "Would have to do an incorrect_action_query"
-                            self.current_action_plan = deque(self.query())
-                            self.current_model.update((self.timestep, self.state_of_the_world), tuple(self.current_action_plan))
+                            new_action_plan = deque(self.query())
+                            #This is wrong...should update the current entry
+                            self.current_model.update((self.timestep, starting_state), tuple(self.current_action_plan[:actions_done] + new_action_plan))
+                            self.debug()
+                            self.current_action_plan += deque(list(self.current_action_plan)[:actions_done] + new_action_plan)
                             self.incorrect_action_queries += 1
+                            self.debug()
                             try:
                                 next_action = self.current_action_plan.popleft()
                             except IndexError:
@@ -176,16 +183,21 @@ class UserPrefDemoController(BaseController):
         self.human_input = data.data
 
     def query(self):
-        user_resp = ('hold',)
+        # user_resp = ('hold',)
         self.human_input = None
         actions_requested = []
-        inp = raw_input("Robot: What can I do to help? (Enter comma-seperated)")
-        user_resp = tuple([item.strip() for item in inp.strip().split(',')])
+        # inp = raw_input("Robot: What can I do to help? (Enter comma-seperated)")
+        # user_resp = tuple([item.strip() for item in inp.strip().split(',')])
+        # print user_resp
+        print "What can I do to help? Select and press 'next.'"
+        while self.human_input != 'next':
+            rospy.Subscriber(self.WEB_INTERFACE, String, self.web_interface_callback)
+            # print("got human_input ", self.human_input)
+            if(self.human_input != None and self.human_input not in actions_requested):
+                actions_requested += [self.human_input]
+            rospy.rostime.wallsleep(0.5)
+        user_resp = tuple(actions_requested)
         print user_resp
-        # while self.human_input != 'next':
-        #     rospy.Subscriber(self.WEB_INTERFACE, String, self.web_interface_callback)
-        #     # print("got human_input ", self.human_input)
-        #     rospy.rostime.wallsleep(0.5)
 
         return user_resp
 
