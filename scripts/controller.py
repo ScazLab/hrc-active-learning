@@ -101,7 +101,7 @@ class UserPrefDemoController(BaseController):
         while not is_shutdown():
             # try:
             interaction_count = 0
-            while self.timestep < 2:#self.task_len:
+            while self.timestep < self.task_len:
 
                 if self.current_model.should_query(self.timestep, self.state_of_the_world.to_tuple()):
                     self.current_action_plan = deque(self.query())
