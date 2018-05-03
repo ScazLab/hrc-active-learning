@@ -89,6 +89,10 @@ class UserPrefDemoController(BaseController):
         # while not is_shutdown():
         #     print self.query()
         #     rospy.signal_shutdown("End of task.")
+        # framework.sim_trained_model(1).prettyprint()
+        # framework.sim_trained_model(1).prettyprint()
+        # framework.sim_trained_model(1).prettyprint()
+        # raw_input('Proceed?')
         self.training()
         # print self.current_model.model[(0,())].most_common(1)[0][1]
         self.debug()
@@ -167,6 +171,14 @@ class UserPrefDemoController(BaseController):
 
                     # break #DEBUGGING
                     self.timestep += 1
+                print ('proactive_queries', proactive_queries, 'incorrect_action_queries', incorrect_action_queries)
+
+                if raw_input('Again?') == 'y':
+                    self.proactive_queries = 0
+                    self.incorrect_action_queries = 0
+                    self.timestep = 0
+                    self.current_action_plan = deque()
+
 
                 rospy.signal_shutdown("End of task.")
                 # break #remove on robot
