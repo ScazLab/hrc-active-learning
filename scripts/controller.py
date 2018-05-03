@@ -100,92 +100,96 @@ class UserPrefDemoController(BaseController):
 
         while not is_shutdown():
             # try:
-                while self.timestep < self.task_len:
+            interaction_count = 0
+            while self.timestep < 2:#self.task_len:
 
-                    if self.current_model.should_query(self.timestep, self.state_of_the_world):
-                        self.current_action_plan = deque(self.query())
-                        self.current_model.update((self.timestep, self.state_of_the_world), tuple(self.current_action_plan))
-                        self.proactive_queries += 1
-                        self.debug()
-                    else:
-                        self.current_action_plan = deque(self.current_model.predict(self.timestep, self.state_of_the_world))
-                        self.debug()
-                    # self.debug()
-                    # raw_input('Proceed?')
+                if self.current_model.should_query(self.timestep, self.state_of_the_world.to_tuple()):
+                    self.current_action_plan = deque(self.query())
+                    # self.current_model.update((self.timestep, self.state_of_the_world.to_tuple()), tuple(self.current_action_plan))
+                    self.proactive_queries += 1
+                    self.debug()
+                else:
+                    self.current_action_plan = deque(self.current_model.predict(self.timestep, self.state_of_the_world.to_tuple()))
+                    self.debug()
+                # self.debug()
+                # raw_input('Proceed?')
 
-                    num_fails = 0
-                    next_action = None
+                num_fails = 0
+                next_action = None
 
-                    # To catch f no supportive actions required:
-                    try:
-                        next_action = self.current_action_plan.popleft()
-                        self.debug()
-                    except IndexError:
-                        self.timestep += 1
-                        self.debug()
-                        continue
-
-                    starting_state = self.state_of_the_world
-                    actions_done = 0
-                    # Go through action plan queue
-                    while True:
-                        if self.state_of_the_world.check_action(next_action):
-                            feedback = self.robot_do(next_action)
-                            actions_done +=1
-                        else:
-                            raise Exception('Invalid action request')
-                        if feedback.success == True:
-                            self.state_of_the_world.update(next_action)
-                            # self.debug()
-                            try:
-                                next_action = self.current_action_plan.popleft()
-                                # self.debug()
-                            except IndexError:
-                                break
-                        elif feedback.response == feedback.ACT_KILLED:
-                            print "Would have to do an incorrect_action_query"
-                            new_action_plan = deque(self.query())
-                            #This is wrong...should update the current entry
-                            self.current_model.update((self.timestep, starting_state), tuple(self.current_action_plan[:actions_done] + new_action_plan))
-                            self.debug()
-                            self.current_action_plan += deque(list(self.current_action_plan)[:actions_done] + new_action_plan)
-                            self.incorrect_action_queries += 1
-                            self.debug()
-                            try:
-                                next_action = self.current_action_plan.popleft()
-                            except IndexError:
-                                break
-                        elif feedback.response in (feedback.NO_IR_SENSOR, feedback.ACT_NOT_IMPL):
-                            self._stop()
-                            raise Exception('Robot Failure')
-                        else:
-                            print "Would have to retry"
-                            num_fails += 1
-                            if num_fails < 3:
-                                pass
-                            #If it fails 3 times, stopping the whole thing rather than going to next timestep. can change
-                            else:
-                                self._stop()
-                                raise Exception('Robot failed 3 times to do supportive action, exiting')
-                        # self.debug()
-
-                    # break #DEBUGGING
+                # To catch f no supportive actions required:
+                try:
+                    next_action = self.current_action_plan.popleft()
+                    self.debug()
+                except IndexError:
                     self.timestep += 1
-                print ('proactive_queries', proactive_queries, 'incorrect_action_queries', incorrect_action_queries)
+                    self.debug()
+                    continue
 
-                if raw_input('Again?') == 'y':
-                    self.proactive_queries = 0
-                    self.incorrect_action_queries = 0
-                    self.timestep = 0
-                    self.current_action_plan = deque()
+                starting_state = self.state_of_the_world.to_tuple()
+                succ_actions_done = []
+                # Go through action plan queue
+                while True:
+                    if self.state_of_the_world.check_action(next_action):
+                        feedback = self.robot_do(next_action)
 
+                    else:
+                        self.current_action_plan = deque(self.query())
+                        self.incorrect_action_queries += 1
+                        try:
+                            next_action = self.current_action_plan.popleft()
+                            continue
+                            # self.debug()
+                        except IndexError:
+                            break
+                        # raise Exception('Invalid action request')
+                    if feedback.success == True:
+                        self.state_of_the_world.update(next_action)
+                        succ_actions_done += [next_action]
+                        # self.debug()
+                        try:
+                            next_action = self.current_action_plan.popleft()
+                            # self.debug()
+                        except IndexError:
+                            break
+                    elif feedback.response == feedback.ACT_KILLED:
+                        print "Would have to do an incorrect_action_query"
+                        self.current_action_plan = deque(self.query())
+                        self.incorrect_action_queries += 1
+                        # self.debug()
+                        try:
+                            next_action = self.current_action_plan.popleft()
+                        except IndexError:
+                            break
+                    elif feedback.response in (feedback.NO_IR_SENSOR, feedback.ACT_NOT_IMPL):
+                        self._stop()
+                        raise Exception('Robot Failure')
+                    else:
+                        print "Would have to retry"
+                        num_fails += 1
+                        if num_fails < 90:
+                            pass
+                        #If it fails 3 times, stopping the whole thing rather than going to next timestep. can change
+                        else:
+                            self._stop()
+                            raise Exception('Robot failed 3 times to do supportive action, exiting')
+                    # self.debug()
 
+                # break #DEBUGGING
+                self.timestep += 1
+                self.current_model.update((self.timestep - 1, starting_state), tuple(succ_actions_done))
+            print ('interaction_count', interaction_count)
+            print ('proactive_queries', self.proactive_queries, 'incorrect_action_queries', self.incorrect_action_queries)
+
+            if raw_input('Again?')[0]== 'y':
+                interaction_count += 1
+                self.proactive_queries = 0
+                self.incorrect_action_queries = 0
+                self.timestep = 0
+                self.current_action_plan = deque()
+                self.state_of_the_world = chair_assembly_task.UserPrefDemoEnvState()
+            else:
                 rospy.signal_shutdown("End of task.")
-                # break #remove on robot
-            # except Exception as e:
-            #     print e
-            #     self._stop()
-
 
     def training(self):
         self.current_model = framework.sim_trained_model(3)

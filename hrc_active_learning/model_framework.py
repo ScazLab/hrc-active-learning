@@ -114,11 +114,13 @@ class UserPrefModel(object):
 		self.model[timestep_state_tup][supp_acts_tup] += 1
 
 	def predict(self, timestep, state):
+		# if state.check_action(self.model[(timestep, state)].most_common(1)[0][0])
 		try:
 			return self.model[(timestep, state)].most_common(1)[0][0]
 		except IndexError: #ONLY FOR DEBUGGING
 			print('timestep', timestep, 'state', state)
 			raw_input('Proceed (UserPrefModel.predict())')
+
 
 	def should_query(self, timestep, state):
 		check = None

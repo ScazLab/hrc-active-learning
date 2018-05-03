@@ -10,6 +10,9 @@ Trial 1
 (8, ('backb_2taken', 'dowel_6taken', 'frontb_2taken', 'screwdriver_taken', 'seat_taken', 'topb_2taken'))                                  Counter({('back', 'long_dowel'): 1})
 (9, ('back_taken', 'backb_2taken', 'dowel_6taken', 'frontb_2taken', 'longdowel_taken', 'screwdriver_taken', 'seat_taken', 'topb_2taken')) Counter({('hold',): 1})
 
+actually i want no holds ever (didn't have feedback for None implemented)
+No Holds are always ok.
+
 Trial 2
 (0, ())                                                                                                                                   Counter({('dowel', 'front_bracket', 'screwdriver'): 1})
 (1, ('dowel_1taken', 'frontb_1taken', 'screwdriver_taken'))                                                                               Counter({('dowel', 'back_bracket'): 1})
@@ -33,3 +36,14 @@ Trial 3
 (7, ('backb_2taken', 'dowel_5taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken'))                                                 Counter({('dowel',): 1})
 (8, ('backb_2taken', 'dowel_6taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken'))                                                 Counter({('top_bracket', 'long_dowel', 'back', 'top_bracket'): 1})
 (9, ('back_taken', 'backb_2taken', 'dowel_6taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'seat_taken', 'topb_2taken')) Counter({('hold',): 1})
+
+Experiment 12:35am
+pref consistent = Trial 1
+only 2 task states
+it 1:
+    ('proactive_queries', 2, 'incorrect_action_queries', 0)
+it 2:
+    ('proactive_queries', 1, 'incorrect_action_queries', 0)
+it 3:
+    ('proactive_queries', 0, 'incorrect_action_queries', 0)
+
