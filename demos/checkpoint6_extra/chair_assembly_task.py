@@ -182,17 +182,7 @@ class UserPrefDemoEnvState(object):
 #     for timestep, (feats, supp_acts) in enumerate(zip(feature_seq, labels)):
 #         r += [((timestep, feats), supp_acts)]
 #     return r
-"""
-Heuristics used to generate labels:
-1. Always give the screwdriver first (what I remember made most sense for folks during Corina's user tests) - change
-2. Humans want (bracket, dowel) for each of the four legs because according to the HTM GP_seat comes afterwards
-(eliminates the possibility of wanting (seat and all four brackets for GP_seat and only dowels for each GP_L#))
-3. introduced: you want them in the order bracket, dowel or dowel, brack for all for legs. I think given the above contraints this makes sense for a real worker.
-4. GP_BR, GP_BL, GP_top: appropriate dowels for each, flip a coin to give the bracket along with it, and just make sure that all brackets are given by the end.
-Randomize the ordering of these being delivered.
-5. A_seat, A_top: decide between hold or ()
-6. No other options for () as a label (gathering parts is assumed to be out of scope of the human's tasks)
-"""
+
 #could add checks for actions
 def sim_user_labels(): #Clean up: change to return in form (timestep_feats_tuple, supp_acts_tuple), but in a nicer way. Can use Env class here
     traj = rand_taskstep_seq()
