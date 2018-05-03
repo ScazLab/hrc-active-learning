@@ -1,0 +1,398 @@
+---Possible features:---
+['back_taken', 'backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'seat_taken', 'topb_1taken', 'topb_2taken']
+=== PART ONE ===
+Demonstration of how user ground truth labels to feature vectors are generated:
+Sequence of task states, for reference:['GP_BR', 'GP_BL', 'GP_top', 'A_back', 'GP_L4', 'GP_L1', 'GP_L3', 'GP_L2', 'GP_seat', 'A_seat']
+()                                                                                                                                                                                                                                                                  	('top_bracket', 'dowel', 'screwdriver')
+('dowel_1taken', 'screwdriver_taken', 'topb_1taken')                                                                                                                                                                                                                	('dowel', 'top_bracket')               
+('dowel_1taken', 'dowel_2taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken')                                                                                                                                                                                 	('long_dowel',)                        
+('dowel_1taken', 'dowel_2taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken')                                                                                                                                                              	('hold',)                              
+('dowel_1taken', 'dowel_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken')                                                                                                                                                	('dowel', 'back_bracket')              
+('backb_1taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken')                                                                                                                	('dowel', 'front_bracket')             
+('backb_1taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken')                                                                               	('dowel', 'back_bracket')              
+('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'frontb_1taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken')                                               	('dowel', 'front_bracket')             
+('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken')              	('seat',)                              
+('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'seat_taken', 'topb_1taken', 'topb_2taken')	()                                     
+
+=== PART TWO ===
+Result of training iterations
+__Features of env__                                                                                                                                                                                                                                                           __Supportive actions to deliver__
+(0, ())                                                                                                                                                                                                                                                                   Counter({('dowel', 'back_bracket', 'screwdriver'): 1, ('dowel', 'top_bracket', 'screwdriver'): 1, ('front_bracket', 'dowel', 'screwdriver'): 1})
+(1, ('backb_1taken', 'dowel_1taken', 'screwdriver_taken'))                                                                                                                                                                                                                Counter({('dowel', 'front_bracket'): 1})
+(1, ('dowel_1taken', 'frontb_1taken', 'screwdriver_taken'))                                                                                                                                                                                                               Counter({('back_bracket', 'dowel'): 1})
+(1, ('dowel_1taken', 'screwdriver_taken', 'topb_1taken'))                                                                                                                                                                                                                 Counter({('dowel', 'top_bracket'): 1})
+(2, ('backb_1taken', 'dowel_1taken', 'dowel_2taken', 'frontb_1taken', 'screwdriver_taken'))                                                                                                                                                                               Counter({('back_bracket', 'dowel'): 1, ('dowel', 'front_bracket'): 1})
+(2, ('dowel_1taken', 'dowel_2taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                                                                                                                                                  Counter({('long_dowel',): 1})
+(3, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'frontb_1taken', 'screwdriver_taken'))                                                                                                                                               Counter({('front_bracket', 'dowel'): 1})
+(3, ('backb_1taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken'))                                                                                                                                              Counter({('dowel', 'back_bracket'): 1})
+(3, ('dowel_1taken', 'dowel_2taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                                                                                                                               Counter({('hold',): 1})
+(4, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken'))                                                                                                              Counter({('seat',): 2})
+(4, ('dowel_1taken', 'dowel_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                                                                                                                 Counter({('front_bracket', 'dowel'): 1})
+(5, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken', 'seat_taken'))                                                                                                Counter({('hold',): 2})
+(5, ('dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'frontb_1taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                                                                                Counter({('back_bracket', 'dowel'): 1})
+(6, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken'))                                                                                  Counter({('top_bracket', 'dowel'): 1, ('dowel', 'top_bracket'): 1})
+(6, ('backb_1taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                                                Counter({('back_bracket', 'dowel'): 1})
+(7, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_1taken'))                                                   Counter({('top_bracket', 'dowel'): 2})
+(7, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'frontb_1taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                Counter({('front_bracket', 'dowel'): 1})
+(8, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))               Counter({('seat',): 1})
+(8, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_1taken', 'topb_2taken'))                    Counter({('long_dowel',): 2})
+(9, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'seat_taken', 'topb_1taken', 'topb_2taken')) Counter({('hold',): 2, (): 1})
+
+Which will be queryed for the first run of ever new user?
+(0, ())                                                                                                                                                                                                                                                                   True
+(1, ('backb_1taken', 'dowel_1taken', 'screwdriver_taken'))                                                                                                                                                                                                                False
+(1, ('dowel_1taken', 'frontb_1taken', 'screwdriver_taken'))                                                                                                                                                                                                               False
+(1, ('dowel_1taken', 'screwdriver_taken', 'topb_1taken'))                                                                                                                                                                                                                 False
+(2, ('backb_1taken', 'dowel_1taken', 'dowel_2taken', 'frontb_1taken', 'screwdriver_taken'))                                                                                                                                                                               True
+(2, ('dowel_1taken', 'dowel_2taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                                                                                                                                                  False
+(3, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'frontb_1taken', 'screwdriver_taken'))                                                                                                                                               False
+(3, ('backb_1taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken'))                                                                                                                                              False
+(3, ('dowel_1taken', 'dowel_2taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                                                                                                                               False
+(4, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken'))                                                                                                              False
+(4, ('dowel_1taken', 'dowel_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                                                                                                                 False
+(5, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken', 'seat_taken'))                                                                                                False
+(5, ('dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'frontb_1taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                                                                                False
+(6, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken'))                                                                                  True
+(6, ('backb_1taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                                                False
+(7, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_1taken'))                                                   False
+(7, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'frontb_1taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                False
+(8, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))               False
+(8, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_1taken', 'topb_2taken'))                    False
+(9, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'seat_taken', 'topb_1taken', 'topb_2taken')) False
+
+=== PART THREE ===
+------Simulation 1------
+User 1's task trajectory, for reference:
+['GP_L4', 'GP_L3', 'GP_L1', 'GP_L2', 'GP_seat', 'A_seat', 'GP_BR', 'GP_BL', 'GP_top', 'A_back']
+User 1's preferences, for reference:
+()                                                                                                                                                                                                                                                                                                	('dowel', 'back_bracket', 'screwdriver')    
+('backb_1taken', 'dowel_1taken', 'screwdriver_taken')                                                                                                                                                                                                                                             	('dowel', 'back_bracket')                   
+('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'screwdriver_taken')                                                                                                                                                                                                             	('dowel', 'front_bracket')                  
+('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'frontb_1taken', 'screwdriver_taken')                                                                                                                                                                            	('dowel', 'front_bracket')                  
+('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken')                                                                                                                                           	('seat',)                                   
+('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken', 'seat_taken')                                                                                                                             	('hold',)                                   
+('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken')                                                                                                               	('dowel',)                                  
+('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_0taken')                                                                                	('dowel',)                                  
+('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_0taken', 'topb_0taken')                                                 	('long_dowel', 'top_bracket', 'top_bracket')
+('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'seat_taken', 'topb_0taken', 'topb_0taken', 'topb_1taken', 'topb_2taken')	('hold',)                                   
+
+Run 1
+[Observed Environment: ()]
+Robot:What can I do to help? -> Human worker's answer: ('dowel', 'back_bracket', 'screwdriver')
+[Robot provides supportive action: ('dowel', 'back_bracket', 'screwdriver')]
+[Observed Environment: ('backb_1taken', 'dowel_1taken', 'screwdriver_taken')]
+[Robot provides supportive action: ('dowel', 'front_bracket')]
+[Human wanted ('dowel', 'back_bracket')]
+Robot:Sorry for not acting as intended. Will try to keep this in mind for next time, but it may take a few times to get right. Providing actions specified.
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'screwdriver_taken')]
+Robot:What can I do to help? -> Human worker's answer: ('dowel', 'front_bracket')
+[Robot provides supportive action: ('dowel', 'front_bracket')]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'frontb_1taken', 'screwdriver_taken')]
+[Robot provides supportive action: ('front_bracket', 'dowel')]
+[Human wanted ('dowel', 'front_bracket')]
+Robot:Sorry for not acting as intended. Will try to keep this in mind for next time, but it may take a few times to get right. Providing actions specified.
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken')]
+[Robot provides supportive action: ('seat',)]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken', 'seat_taken')]
+[Robot provides supportive action: ('hold',)]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken')]
+Robot:What can I do to help? -> Human worker's answer: ('dowel',)
+[Robot provides supportive action: ('dowel',)]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_0taken')]
+Robot:What can I do to help? -> Human worker's answer: ('dowel',)
+[Robot provides supportive action: ('dowel',)]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_0taken', 'topb_0taken')]
+Robot:What can I do to help? -> Human worker's answer: ('long_dowel', 'top_bracket', 'top_bracket')
+[Robot provides supportive action: ('long_dowel', 'top_bracket', 'top_bracket')]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'seat_taken', 'topb_0taken', 'topb_0taken', 'topb_1taken', 'topb_2taken')]
+Robot:What can I do to help? -> Human worker's answer: ('hold',)
+[Robot provides supportive action: ('hold',)]
+6 total queries made.
+2 incorrect actions.
+Run 2
+[Observed Environment: ()]
+Robot:What can I do to help? -> Human worker's answer: ('dowel', 'back_bracket', 'screwdriver')
+[Robot provides supportive action: ('dowel', 'back_bracket', 'screwdriver')]
+[Observed Environment: ('backb_1taken', 'dowel_1taken', 'screwdriver_taken')]
+Robot:What can I do to help? -> Human worker's answer: ('dowel', 'back_bracket')
+[Robot provides supportive action: ('dowel', 'back_bracket')]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'screwdriver_taken')]
+[Robot provides supportive action: ('dowel', 'front_bracket')]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'frontb_1taken', 'screwdriver_taken')]
+Robot:What can I do to help? -> Human worker's answer: ('dowel', 'front_bracket')
+[Robot provides supportive action: ('dowel', 'front_bracket')]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken')]
+[Robot provides supportive action: ('seat',)]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken', 'seat_taken')]
+[Robot provides supportive action: ('hold',)]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken')]
+Robot:What can I do to help? -> Human worker's answer: ('dowel',)
+[Robot provides supportive action: ('dowel',)]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_0taken')]
+[Robot provides supportive action: ('dowel',)]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_0taken', 'topb_0taken')]
+[Robot provides supportive action: ('long_dowel', 'top_bracket', 'top_bracket')]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'seat_taken', 'topb_0taken', 'topb_0taken', 'topb_1taken', 'topb_2taken')]
+[Robot provides supportive action: ('hold',)]
+[Robot acted as intended.]
+4 total queries made.
+0 incorrect actions.
+Run 3
+[Observed Environment: ()]
+[Robot provides supportive action: ('dowel', 'back_bracket', 'screwdriver')]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'dowel_1taken', 'screwdriver_taken')]
+[Robot provides supportive action: ('dowel', 'back_bracket')]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'screwdriver_taken')]
+[Robot provides supportive action: ('dowel', 'front_bracket')]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'frontb_1taken', 'screwdriver_taken')]
+[Robot provides supportive action: ('dowel', 'front_bracket')]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken')]
+[Robot provides supportive action: ('seat',)]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken', 'seat_taken')]
+[Robot provides supportive action: ('hold',)]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken')]
+Robot:What can I do to help? -> Human worker's answer: ('dowel',)
+[Robot provides supportive action: ('dowel',)]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_0taken')]
+[Robot provides supportive action: ('dowel',)]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_0taken', 'topb_0taken')]
+[Robot provides supportive action: ('long_dowel', 'top_bracket', 'top_bracket')]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'seat_taken', 'topb_0taken', 'topb_0taken', 'topb_1taken', 'topb_2taken')]
+[Robot provides supportive action: ('hold',)]
+[Robot acted as intended.]
+1 total queries made.
+0 incorrect actions.
+Run 4
+[Observed Environment: ()]
+[Robot provides supportive action: ('dowel', 'back_bracket', 'screwdriver')]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'dowel_1taken', 'screwdriver_taken')]
+[Robot provides supportive action: ('dowel', 'back_bracket')]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'screwdriver_taken')]
+[Robot provides supportive action: ('dowel', 'front_bracket')]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'frontb_1taken', 'screwdriver_taken')]
+[Robot provides supportive action: ('dowel', 'front_bracket')]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken')]
+[Robot provides supportive action: ('seat',)]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken', 'seat_taken')]
+[Robot provides supportive action: ('hold',)]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken')]
+[Robot provides supportive action: ('dowel',)]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_0taken')]
+[Robot provides supportive action: ('dowel',)]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_0taken', 'topb_0taken')]
+[Robot provides supportive action: ('long_dowel', 'top_bracket', 'top_bracket')]
+[Robot acted as intended.]
+[Observed Environment: ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'seat_taken', 'topb_0taken', 'topb_0taken', 'topb_1taken', 'topb_2taken')]
+[Robot provides supportive action: ('hold',)]
+[Robot acted as intended.]
+0 total queries made.
+0 incorrect actions.
+4 runs before success
+------Simulation 2------
+---------Worker: 0
+Run 1
+6 total queries made.
+2 incorrect actions.
+Run 2
+2 total queries made.
+1 incorrect actions.
+Run 3
+2 total queries made.
+0 incorrect actions.
+Run 4
+1 total queries made.
+0 incorrect actions.
+Run 5
+0 total queries made.
+0 incorrect actions.
+5 runs before success
+---------Worker: 1
+Run 1
+2 total queries made.
+1 incorrect actions.
+Run 2
+2 total queries made.
+0 incorrect actions.
+Run 3
+0 total queries made.
+0 incorrect actions.
+3 runs before success
+---------Worker: 2
+Run 1
+6 total queries made.
+3 incorrect actions.
+Run 2
+4 total queries made.
+1 incorrect actions.
+Run 3
+3 total queries made.
+0 incorrect actions.
+Run 4
+1 total queries made.
+0 incorrect actions.
+Run 5
+0 total queries made.
+0 incorrect actions.
+5 runs before success
+---------Worker: 3
+Run 1
+6 total queries made.
+1 incorrect actions.
+Run 2
+1 total queries made.
+1 incorrect actions.
+Run 3
+1 total queries made.
+0 incorrect actions.
+Run 4
+0 total queries made.
+0 incorrect actions.
+4 runs before success
+---------Worker: 4
+Run 1
+3 total queries made.
+4 incorrect actions.
+Run 2
+4 total queries made.
+1 incorrect actions.
+Run 3
+1 total queries made.
+0 incorrect actions.
+Run 4
+0 total queries made.
+0 incorrect actions.
+4 runs before success
+---------Worker: 5
+Run 1
+7 total queries made.
+1 incorrect actions.
+Run 2
+2 total queries made.
+0 incorrect actions.
+Run 3
+1 total queries made.
+0 incorrect actions.
+Run 4
+1 total queries made.
+0 incorrect actions.
+Run 5
+0 total queries made.
+0 incorrect actions.
+5 runs before success
+---------Worker: 6
+Run 1
+7 total queries made.
+2 incorrect actions.
+Run 2
+3 total queries made.
+0 incorrect actions.
+Run 3
+1 total queries made.
+0 incorrect actions.
+Run 4
+1 total queries made.
+0 incorrect actions.
+Run 5
+0 total queries made.
+0 incorrect actions.
+5 runs before success
+---------Worker: 7
+Run 1
+6 total queries made.
+1 incorrect actions.
+Run 2
+1 total queries made.
+1 incorrect actions.
+Run 3
+1 total queries made.
+0 incorrect actions.
+Run 4
+0 total queries made.
+0 incorrect actions.
+4 runs before success
+---------Worker: 8
+Run 1
+7 total queries made.
+2 incorrect actions.
+Run 2
+3 total queries made.
+0 incorrect actions.
+Run 3
+0 total queries made.
+0 incorrect actions.
+3 runs before success
+---------Worker: 9
+Worker 9 ground-truth, for reference:
+()                                                                                                                                                                                                                                                                  	('top_bracket', 'dowel', 'screwdriver')
+('dowel_1taken', 'screwdriver_taken', 'topb_1taken')                                                                                                                                                                                                                	('dowel', 'top_bracket')               
+('dowel_1taken', 'dowel_2taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken')                                                                                                                                                                                 	('long_dowel',)                        
+('dowel_1taken', 'dowel_2taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken')                                                                                                                                                              	('hold',)                              
+('dowel_1taken', 'dowel_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken')                                                                                                                                                	('dowel', 'back_bracket')              
+('backb_1taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken')                                                                                                                	('dowel', 'front_bracket')             
+('backb_1taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken')                                                                               	('dowel', 'back_bracket')              
+('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'frontb_1taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken')                                               	('dowel', 'front_bracket')             
+('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken')              	('seat',)                              
+('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'seat_taken', 'topb_1taken', 'topb_2taken')	('hold',)                              
+
+Default model, for reference:
+__Features of env__                                                                                                                                                                                                                                                           __Supportive actions to deliver__
+(0, ())                                                                                                                                                                                                                                                                   Counter({('dowel', 'back_bracket', 'screwdriver'): 1, ('dowel', 'top_bracket', 'screwdriver'): 1, ('front_bracket', 'dowel', 'screwdriver'): 1})
+(1, ('backb_1taken', 'dowel_1taken', 'screwdriver_taken'))                                                                                                                                                                                                                Counter({('dowel', 'front_bracket'): 1})
+(1, ('dowel_1taken', 'frontb_1taken', 'screwdriver_taken'))                                                                                                                                                                                                               Counter({('back_bracket', 'dowel'): 1})
+(1, ('dowel_1taken', 'screwdriver_taken', 'topb_1taken'))                                                                                                                                                                                                                 Counter({('dowel', 'top_bracket'): 1})
+(2, ('backb_1taken', 'dowel_1taken', 'dowel_2taken', 'frontb_1taken', 'screwdriver_taken'))                                                                                                                                                                               Counter({('back_bracket', 'dowel'): 1, ('dowel', 'front_bracket'): 1})
+(2, ('dowel_1taken', 'dowel_2taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                                                                                                                                                  Counter({('long_dowel',): 1})
+(3, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'frontb_1taken', 'screwdriver_taken'))                                                                                                                                               Counter({('front_bracket', 'dowel'): 1})
+(3, ('backb_1taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken'))                                                                                                                                              Counter({('dowel', 'back_bracket'): 1})
+(3, ('dowel_1taken', 'dowel_2taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                                                                                                                               Counter({('hold',): 1})
+(4, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken'))                                                                                                              Counter({('seat',): 2})
+(4, ('dowel_1taken', 'dowel_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                                                                                                                 Counter({('front_bracket', 'dowel'): 1})
+(5, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'screwdriver_taken', 'seat_taken'))                                                                                                Counter({('hold',): 2})
+(5, ('dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'frontb_1taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                                                                                Counter({('back_bracket', 'dowel'): 1})
+(6, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken'))                                                                                  Counter({('top_bracket', 'dowel'): 1, ('dowel', 'top_bracket'): 1})
+(6, ('backb_1taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'frontb_1taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                                                Counter({('back_bracket', 'dowel'): 1})
+(7, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_1taken'))                                                   Counter({('top_bracket', 'dowel'): 2})
+(7, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'frontb_1taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))                                                Counter({('front_bracket', 'dowel'): 1})
+(8, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'topb_1taken', 'topb_2taken'))               Counter({('seat',): 1})
+(8, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'screwdriver_taken', 'seat_taken', 'topb_1taken', 'topb_2taken'))                    Counter({('long_dowel',): 2})
+(9, ('backb_1taken', 'backb_2taken', 'dowel_1taken', 'dowel_2taken', 'dowel_3taken', 'dowel_4taken', 'dowel_5taken', 'dowel_6taken', 'frontb_1taken', 'frontb_2taken', 'hold_taken', 'longdowel_taken', 'screwdriver_taken', 'seat_taken', 'topb_1taken', 'topb_2taken')) Counter({('hold',): 2, (): 1})
+
+Run 1
+2 total queries made.
+3 incorrect actions.
+Run 2
+4 total queries made.
+0 incorrect actions.
+Run 3
+1 total queries made.
+0 incorrect actions.
+Run 4
+1 total queries made.
+0 incorrect actions.
+Run 5
+0 total queries made.
+0 incorrect actions.
+5 runs before success
