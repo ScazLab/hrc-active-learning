@@ -12,5 +12,5 @@ controller
 web-interface topic
 	'/hrc_active_learning/web_interface/pressed'
 
-Report, Demo Videos:
-	./demos/Report/
+Report:
+	./demos/CPSC490_Submission/report_CS490.pdf
