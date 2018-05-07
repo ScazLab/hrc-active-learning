@@ -2,28 +2,6 @@
 import os
 import argparse
 import sys
-import distutils.dir_util
-from threading import Lock
-
-import numpy as np
-import random
-from sklearn.externals import joblib
-import rospy
-from rospy import init_node, is_shutdown
-from std_msgs.msg import String
-from std_srvs.srv import Empty
-from rospy_tutorials.msg import Floats
-from rospy.numpy_msg import numpy_msg
-
-from human_robot_collaboration.controller import BaseController
-from svox_tts.srv import Speech, SpeechRequest
-from hrc_pred_supp_bhv.service_request import ServiceRequest, finished_request
-from hrc_pred_supp_bhv.task_def import *
-from hrc_pred_supp_bhv.srv import *
-from hrc_pred_supp_bhv.bern_hmm.bernoulli_hmm import *
-
-
-
 
 import rospy
 from rospy import init_node, is_shutdown
@@ -38,10 +16,10 @@ from hrc_active_learning.utils import *
 from collections import deque
 
 #TODO
-#- model framework class, with __str__()
+#- model framework class, with __str__() --done
 #- obj params
-#- __init__ rather than _run?
-#- improve readability
+#- __init__ rather than _run? for vars --done
+#- improve readability --done
 #- array O(1) for state_of_the_world check/update rather than list lookup, note has to be hashable type
 #- change 'face' display
 #- ask Corina about _stop() for last condition feedback -- left arm suction problem
@@ -78,14 +56,15 @@ class UserPrefDemoController(BaseController):
 
     def debug(self):
         self.current_model.prettyprint()
-        # print('proactive_queries ', self.proactive_queries)
-        # print('incorrect_action_queries ', self.incorrect_action_queries)
+        print('proactive_queries ', self.proactive_queries)
+        print('incorrect_action_queries ', self.incorrect_action_queries)
         print('timestep ', self.timestep)
         print('state_of_the_world ', self.state_of_the_world)
         print('current_action_plan ', self.current_action_plan)
-        # print('task_len ', self.task_len)
+        print('task_len ', self.task_len)
 
     def _run(self):
+        # TO GENERATE SIMULATED USER PREFERENCES FOR REFERENCE (USERFUL FOR DEBUGGING)
         # while not is_shutdown():
         #     print self.query()
         #     rospy.signal_shutdown("End of task.")
@@ -93,26 +72,22 @@ class UserPrefDemoController(BaseController):
         # framework.sim_trained_model(1).prettyprint()
         # framework.sim_trained_model(1).prettyprint()
         # raw_input('Proceed?')
+
         self.training()
-        # print self.current_model.model[(0,())].most_common(1)[0][1]
         self.debug()
         raw_input('Proceed?')
 
         while not is_shutdown():
-            # try:
             interaction_count = 0
             while self.timestep < self.task_len:
 
                 if self.current_model.should_query(self.timestep, self.state_of_the_world.to_tuple()):
                     self.current_action_plan = deque(self.query())
-                    # self.current_model.update((self.timestep, self.state_of_the_world.to_tuple()), tuple(self.current_action_plan))
                     self.proactive_queries += 1
                     self.debug()
                 else:
                     self.current_action_plan = deque(self.current_model.predict(self.timestep, self.state_of_the_world.to_tuple()))
                     self.debug()
-                # self.debug()
-                # raw_input('Proceed?')
 
                 num_fails = 0
                 next_action = None
@@ -139,24 +114,19 @@ class UserPrefDemoController(BaseController):
                         try:
                             next_action = self.current_action_plan.popleft()
                             continue
-                            # self.debug()
                         except IndexError:
                             break
-                        # raise Exception('Invalid action request')
                     if feedback.success == True:
                         self.state_of_the_world.update(next_action)
                         succ_actions_done += [next_action]
-                        # self.debug()
                         try:
                             next_action = self.current_action_plan.popleft()
-                            # self.debug()
                         except IndexError:
                             break
                     elif feedback.response == feedback.ACT_KILLED:
                         print "Would have to do an incorrect_action_query"
                         self.current_action_plan = deque(self.query())
                         self.incorrect_action_queries += 1
-                        # self.debug()
                         try:
                             next_action = self.current_action_plan.popleft()
                         except IndexError:
@@ -167,15 +137,12 @@ class UserPrefDemoController(BaseController):
                     else:
                         print "Would have to retry"
                         num_fails += 1
-                        if num_fails < 90:
+                        if num_fails < 10:
                             pass
-                        #If it fails 3 times, stopping the whole thing rather than going to next timestep. can change
                         else:
                             self._stop()
-                            raise Exception('Robot failed 3 times to do supportive action, exiting')
-                    # self.debug()
+                            raise Exception('Robot failed 10 times to do supportive action, exiting')
 
-                # break #DEBUGGING
                 self.timestep += 1
                 self.current_model.update((self.timestep - 1, starting_state), tuple(succ_actions_done))
             print ('interaction_count', interaction_count)
@@ -199,16 +166,12 @@ class UserPrefDemoController(BaseController):
         self.human_input = data.data
 
     def query(self):
-        # user_resp = ('hold',)
         self.human_input = None
         actions_requested = []
-        # inp = raw_input("Robot: What can I do to help? (Enter comma-seperated)")
-        # user_resp = tuple([item.strip() for item in inp.strip().split(',')])
-        # print user_resp
+
         print "What can I do to help? Select and press 'next.'"
         while self.human_input != 'next':
             rospy.Subscriber(self.WEB_INTERFACE, String, self.web_interface_callback)
-            # print("got human_input ", self.human_input)
             if(self.human_input != None and self.human_input not in actions_requested):
                 actions_requested += [self.human_input]
             rospy.rostime.wallsleep(0.5)
@@ -217,7 +180,8 @@ class UserPrefDemoController(BaseController):
 
         return user_resp
 
-    def robot_do(self, spec):
+    #This code could be rewritten more elegantly
+    def robot_do(self, spec): 
         index = None
         if spec == 'dowel':
             if self.state_of_the_world.dowel_count == 0:
@@ -272,7 +236,6 @@ class UserPrefDemoController(BaseController):
 
 
 def main():
-    # framework.sim_trained_model(1).prettyprint()
     controller = UserPrefDemoController()
     controller.time_step = 0
     controller._run()

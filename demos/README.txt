@@ -16,5 +16,39 @@ Checkpoint 3: as per 3/12/2018 meeting with Corina
 	- spend time working with Baxter
 
 Checkpoint4:
+	- just stuck with my implementation of htm
+	- completed query update
+	- desc:
+		part 1 - Oi:htmleaf dict
+		part 2 - htmleaf:supportiveaction dict, htmleaf:query?TorF dict
+		main - part1 dict, part2 dict
+		        print default query dict
+		        worker bob: 3 runs, print query dict now
+		        worker carol: 3 runs, print query dict now
+		part 3 - takes a starting htmleaf:supportiveaction dict and a starting htmleaf:query?TorF dict and update and return both
 
+Checkpoint5:
+	- uses real features (no model of task needed, but for the generation of simulated user preferences)
+	- NOTE: environment features modeled slightly differently here as compared to the hrc_active_learning package, but still equivalent
 
+Checkpoint6:
+	- see final hrc_active_learning package in parent directory. 
+	- desc:
+		HTM
+			The HTM class was only used to generated simulated user prefence label data. HTMs
+			were defined to be trees, where inner nodes were ’parallel’ or ’sequential’ directives
+			for the children, and the leaves are steps in the task.
+		Chair Assembly Task
+			This includes a class UserPrefEnvDemo which represents the state of the environment
+			which can be updated given past successful actions. This file also includes sim user
+			labels() which produces labels for given (timestep, environment features) based on
+			some random variables and some reasonable heuristics.
+		Model Framework
+			This contains the UserPrefModel class that contains a dict of (timestep, environment
+			features) keys and Counter objects keeping track of votes for supportive action lists.
+		Other
+			Utils.py contains an implementation of a prettyprint function I wrote useful for de-
+			bugging.
+
+Checkpoint6_extra
+	- unfinished code to refactor simulation to use classes defined in hrc_active_learning, and some notes/data collected from robot experiments
