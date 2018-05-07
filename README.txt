@@ -5,12 +5,15 @@ To run simulation demo (refer to demos/README.txt for notes about simulation cod
 python demos/checkpoint5/demo9.py
 
 Robot Demo:
-launch file
-	./launch/hrc-active-learning.launch
-controller
-	./scripts/controller.py
-web-interface topic
-	'/hrc_active_learning/web_interface/pressed'
+	launch file
+		./launch/hrc-active-learning.launch
+	controller
+		./scripts/controller.py
+	web-interface topic
+		'/hrc_active_learning/web_interface/pressed'
 
 Report:
 	./demos/CPSC490_Submission/report_CS490.pdf
+
+Videos:
+	see demo_v2.mp4 in privately shared weblink (dus.cs.yale.edu/490/...)
